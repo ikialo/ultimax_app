@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "885121112122",
+    "firebase_url": "https://ultimax-e4e58.firebaseio.com",
+    "project_id": "ultimax-e4e58",
+    "storage_bucket": "ultimax-e4e58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885121112122:android:73af6d632d57ea58ee7d03",
+        "android_client_info": {
+          "package_name": "synarcsystems.com.ultimax2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885121112122-0ijd5ibm9toi6pi3jhuqc0ac8svkrd0b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDThEkTkA4cpYJpYO9XYy2dJRYJKpD8_dE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885121112122-0ijd5ibm9toi6pi3jhuqc0ac8svkrd0b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
