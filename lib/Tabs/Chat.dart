@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ultimax2/ReplyPage.dart';
 
 class Chat extends StatelessWidget {
   final String peerId;
@@ -205,6 +206,8 @@ class ChatScreenState extends State<ChatScreen> {
                       margin: EdgeInsets.only(
                           bottom: isLastMessageRight(index) ? 20.0 : 10.0,
                           right: 10.0),
+
+
                     )
                   : document['type'] == 1
                       // Image
@@ -294,7 +297,8 @@ class ChatScreenState extends State<ChatScreen> {
       );
     } else {
       // Left (peer message)
-      return Container(
+      return GestureDetector(
+        child:Container(
         child: Column(
           children: <Widget>[
             Row(
@@ -302,7 +306,7 @@ class ChatScreenState extends State<ChatScreen> {
 //                isLastMessageLeft(index)
 //                    ?
 
-              // Other users profileImage
+                // Other users profileImage
                 Material(
                   child: CachedNetworkImage(
                     placeholder: (context, url) => Container(
@@ -326,81 +330,81 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
 //                    : Container(width: 35.0),
 
-              // Chooses the tyoe of message and shows accordingly
+                // Chooses the tyoe of message and shows accordingly
                 document['type'] == 0
                     ? Container(
-                        child: Text(
-                          document['content'],
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                        padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                        width: 200.0,
-                        decoration: BoxDecoration(
-                            color: primaryColor,
-                            borderRadius: BorderRadius.circular(8.0)),
-                        margin: EdgeInsets.only(left: 10.0),
-                      )
+                  child: Text(
+                    document['content'],
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                  width: 200.0,
+                  decoration: BoxDecoration(
+                      color: Colors.blueGrey,
+                      borderRadius: BorderRadius.circular(8.0)),
+                  margin: EdgeInsets.only(left: 10.0),
+                )
                     : document['type'] == 1
-                        ? Container(
-                            child: FlatButton(
-                              child: Material(
-                                child: CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          themeColor),
-                                    ),
-                                    width: 200.0,
-                                    height: 200.0,
-                                    padding: EdgeInsets.all(70.0),
-                                    decoration: BoxDecoration(
-                                      color: greyColor2,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(8.0),
-                                      ),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      Material(
-                                    child: Image.asset(
-                                      'images/img_not_available.jpeg',
-                                      width: 200.0,
-                                      height: 200.0,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                    clipBehavior: Clip.hardEdge,
-                                  ),
-                                  imageUrl: document['content'],
-                                  width: 200.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8.0)),
-                                clipBehavior: Clip.hardEdge,
+                    ? Container(
+                  child: FlatButton(
+                    child: Material(
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => Container(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                themeColor),
+                          ),
+                          width: 200.0,
+                          height: 200.0,
+                          padding: EdgeInsets.all(70.0),
+                          decoration: BoxDecoration(
+                            color: greyColor2,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            Material(
+                              child: Image.asset(
+                                'images/img_not_available.jpeg',
+                                width: 200.0,
+                                height: 200.0,
+                                fit: BoxFit.cover,
                               ),
-                              onPressed: () {
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                            ),
+                        imageUrl: document['content'],
+                        width: 200.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,
+                      ),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(8.0)),
+                      clipBehavior: Clip.hardEdge,
+                    ),
+                    onPressed: () {
 //                      Navigator.push(context,
 //                          MaterialPageRoute(builder: (context) => FullPhoto(url: document['content'])));
-                              },
-                              padding: EdgeInsets.all(0),
-                            ),
-                            margin: EdgeInsets.only(left: 10.0),
-                          )
-                        : Container(
-                            child: new Image.asset(
-                              'images/${document['content']}.gif',
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.cover,
-                            ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
-                          ),
+                    },
+                    padding: EdgeInsets.all(0),
+                  ),
+                  margin: EdgeInsets.only(left: 10.0),
+                )
+                    : Container(
+                  child: new Image.asset(
+                    'images/${document['content']}.gif',
+                    width: 100.0,
+                    height: 100.0,
+                    fit: BoxFit.cover,
+                  ),
+                  margin: EdgeInsets.only(
+                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                      right: 10.0),
+                ),
               ],
             ),
 
@@ -408,7 +412,7 @@ class ChatScreenState extends State<ChatScreen> {
 //            isLastMessageLeft(index)
 //                ?
 
-          // shows time at the end of the message
+            // shows time at the end of the message
             Container(
               child: Text(
                 DateFormat('dd MMM kk:mm').format(
@@ -426,6 +430,22 @@ class ChatScreenState extends State<ChatScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
         ),
         margin: EdgeInsets.only(bottom: 10.0),
+      ) ,
+        onLongPress: (){
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text("Pressed stuuff"),
+
+
+          ));
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+
+                  ReplyPage(message:document['content'] , senderID: "test",)
+              ));
+        },
       );
     }
   }
@@ -652,6 +672,7 @@ class ChatScreenState extends State<ChatScreen> {
                     itemCount: snapshot.data.documents.length,
                     reverse: true,
                     controller: listScrollController,
+
                   );
                 }
               },
