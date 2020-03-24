@@ -11,11 +11,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Reply extends StatelessWidget {
   final String message;
+
   final String senderID;
+  final String senderImage;
 
   var primaryColor = Colors.blue;
 
-  Reply({Key key, @required this.message, @required this.senderID})
+  Reply({Key key, @required this.message, @required this.senderID, @required this.senderImage })
       : super(key: key);
 
   @override
@@ -25,6 +27,7 @@ class Reply extends StatelessWidget {
       body: new ReplyPage(
         message: message,
         senderID: senderID,
+        senderImage: senderImage,
       ),
     );
   }
@@ -35,16 +38,17 @@ class ReplyPage extends StatefulWidget {
   final String message;
   final String senderID;
 
+  final String senderImage;
 
 
 
 
-  ReplyPage({Key key, @required this.message, @required this.senderID})
+  ReplyPage({Key key, @required this.message, @required this.senderID, @required this.senderImage})
       : super(key: key);
 
   @override
   State createState() =>
-      new _ReplyPageState(message: message, senderID: senderID);
+      new _ReplyPageState(message: message, senderID: senderID, senderImage: senderImage);
 }
 
 class _ReplyPageState extends State<ReplyPage> {
@@ -54,15 +58,20 @@ class _ReplyPageState extends State<ReplyPage> {
 
   Color themeColor = Colors.yellowAccent;
 
-  _ReplyPageState({Key key, @required this.message, @required this.senderID});
+  _ReplyPageState({Key key, @required this.message, @required this.senderID, @required this.senderImage});
 
 
   var primaryColor = Colors.white;
 
+
+
+  // sender ID and Sender Image are from the auther of the message being replied too
   String message;
   String senderID;
-  String id;
+  String senderImage;
 
+  String id;
+  String ReplierImage;
   var listMessage;
   SharedPreferences prefs;
 
@@ -88,7 +97,22 @@ class _ReplyPageState extends State<ReplyPage> {
     isShowSticker = false;
     imageUrl = '';
 
-    //readLocal();
+    readLocal();
+    }
+
+  readLocal() async {
+    prefs = await SharedPreferences.getInstance();
+    ReplierImage = prefs.getString("photoUrl");
+
+    id = prefs.getString('id') ?? '';
+
+
+    Firestore.instance
+        .collection('users')
+        .document(id)
+        .updateData({'chattingWith': senderID});
+
+    setState(() {});
   }
 
   void onFocusChange() {
@@ -100,24 +124,7 @@ class _ReplyPageState extends State<ReplyPage> {
     }
   }
 
-//  readLocal() async {
-//    prefs = await SharedPreferences.getInstance();
-//    SenderImage = prefs.getString("photoUrl");
-//
-//    id = prefs.getString('id') ?? '';
-//    if (id.hashCode <= peerId.hashCode) {
-//      groupChatId = '$id-$peerId';
-//    } else {
-//      groupChatId = '$peerId-$id';
-//    }
-//
-//    Firestore.instance
-//        .collection('users')
-//        .document(id)
-//        .updateData({'chattingWith': peerId});
-//
-//    setState(() {});
-//  }
+
 
 //  Future getImage() async {
 //    imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -157,13 +164,33 @@ class _ReplyPageState extends State<ReplyPage> {
 //    });
 //  }
 
+
   void onSendMessage(String content, int type) {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       textEditingController.clear();
 
-      Fluttertoast.showToast(msg: content);
+      var documentReference = Firestore.instance
+          .collection('Replies')
+          .document(senderID)
+          .collection(message.length < 255? message : message.substring(0,255))
+          .document(DateTime.now().millisecondsSinceEpoch.toString());
 
+      Firestore.instance.runTransaction((transaction) async {
+        await transaction.set(
+          documentReference,
+          {
+            'idFrom': id,
+            'idTo': senderID,
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+            'content': content,
+            'type': type,
+            'SenderUrlImage': SenderImage,
+            'ReplierImage': ReplierImage
+
+          },
+        );
+      });
       listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
     } else {
@@ -307,7 +334,7 @@ class _ReplyPageState extends State<ReplyPage> {
                         height: 35.0,
                         padding: EdgeInsets.all(10.0),
                       ),
-                      imageUrl: document['SenderUrlImage'],
+                      imageUrl: document['ReplierImage'],
                       width: 35.0,
                       height: 35.0,
                       fit: BoxFit.cover,
@@ -426,14 +453,14 @@ class _ReplyPageState extends State<ReplyPage> {
 
 
           ));
-
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-
-                      ReplyPage(message:document['content'] , senderID: "test",)
-              ));
+//
+//          Navigator.push(
+//              context,
+//              MaterialPageRoute(
+//                  builder: (context) =>
+//
+//                      ReplyPage(message:document['content'] , senderID: "test",)
+//              ));
         },
       );
     }
@@ -566,7 +593,7 @@ class _ReplyPageState extends State<ReplyPage> {
           ? Container(
         child: Center(
           child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(themeColor)),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
         ),
         color: Colors.white.withOpacity(0.8),
       )
@@ -634,25 +661,28 @@ class _ReplyPageState extends State<ReplyPage> {
 
   Widget buildListMessage() {
     return Flexible(
-      child: groupChatId == ''
+      child: groupChatId != ''
           ? Center(
           child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
           : StreamBuilder(
         stream: Firestore.instance
-            .collection('messages')
-            .document("messbo")
-            .collection("messbo")
+            .collection('Replies')
+            .document(senderID)
+            .collection(message.length < 255? message : message.substring(0,255))
             .orderBy('timestamp', descending: true)
             .limit(20)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
+
+
             return Center(
                 child: CircularProgressIndicator(
                     valueColor:
-                    AlwaysStoppedAnimation<Color>(themeColor)));
+                    AlwaysStoppedAnimation<Color>(Colors.purple)));
           } else {
+
             listMessage = snapshot.data.documents;
             return ListView.builder(
               padding: EdgeInsets.all(10.0),

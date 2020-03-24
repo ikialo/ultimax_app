@@ -8,12 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../main.dart';
 
 class MyApp extends StatelessWidget {
+  Color black = Colors.black;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Chat Demo',
       theme: ThemeData(
-        primaryColor: Colors.blue,
+        primaryColor: black,
       ),
       home: LoginScreen(title: 'CHAT DEMO'),
       debugShowCheckedModeBanner: false,
@@ -82,6 +84,7 @@ class LoginScreenState extends State<LoginScreen> {
 
     FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
 
+
     if (firebaseUser != null) {
       // Check is already sign up
       final QuerySnapshot result =
@@ -96,6 +99,8 @@ class LoginScreenState extends State<LoginScreen> {
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
           'chattingWith': null
         });
+
+
 
         // Write data to local
         currentUser = firebaseUser;
@@ -114,6 +119,14 @@ class LoginScreenState extends State<LoginScreen> {
         isLoading = false;
       });
 
+      firebaseUser.getIdToken(refresh: true).then((idToken) => {
+        
+        prefs.setBool("admin", idToken.claims.containsKey("admin"))
+
+
+
+      }
+      );
       Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen(currentUserId: firebaseUser.uid)));
     } else {
       Fluttertoast.showToast(msg: "Sign in fail");
@@ -129,7 +142,7 @@ class LoginScreenState extends State<LoginScreen> {
         appBar: AppBar(
           title: Text(
             widget.title,
-            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+            style: TextStyle(color:Colors.black, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),
@@ -142,7 +155,7 @@ class LoginScreenState extends State<LoginScreen> {
                     'SIGN IN WITH GOOGLE',
                     style: TextStyle(fontSize: 16.0),
                   ),
-                  color: Color(0xffdd4b39),
+                  color: Colors.black,
                   highlightColor: Color(0xffff7f7f),
                   splashColor: Colors.transparent,
                   textColor: Colors.white,

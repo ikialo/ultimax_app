@@ -48,6 +48,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   Color themeColor = Colors.yellow;
 
+  Color black = Colors.black;
+
   ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar});
 
   var primaryColor = Colors.white;
@@ -55,6 +57,7 @@ class ChatScreenState extends State<ChatScreen> {
   String peerId;
   String peerAvatar;
   String id;
+  bool openAdmin = false;
 
   var listMessage;
   String groupChatId;
@@ -65,6 +68,7 @@ class ChatScreenState extends State<ChatScreen> {
   bool isShowSticker;
   String imageUrl;
   String SenderImage;
+  bool admin;
 
   final TextEditingController textEditingController =
       new TextEditingController();
@@ -81,6 +85,7 @@ class ChatScreenState extends State<ChatScreen> {
     isLoading = false;
     isShowSticker = false;
     imageUrl = '';
+    admin = false;
 
     readLocal();
   }
@@ -97,6 +102,8 @@ class ChatScreenState extends State<ChatScreen> {
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     SenderImage = prefs.getString("photoUrl");
+
+    admin = prefs.getBool("admin");
 
     id = prefs.getString('id') ?? '';
     if (id.hashCode <= peerId.hashCode) {
@@ -431,6 +438,18 @@ class ChatScreenState extends State<ChatScreen> {
         ),
         margin: EdgeInsets.only(bottom: 10.0),
       ) ,
+        onTap: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+
+                      Reply(message: document['content'],
+                          senderID: document['idFrom'],
+                          senderImage: document['senderImage'])
+              ));
+        },
+
         onLongPress: (){
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text("Pressed stuuff"),
@@ -438,13 +457,17 @@ class ChatScreenState extends State<ChatScreen> {
 
           ));
 
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
 
-                  Reply(message:document['content'] , senderID: "test",)
-              ));
+          if (!admin) {
+
+          }else{
+            openDialog(document);
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(" you are admin"),
+
+
+            ));
+          }
         },
       );
     }
@@ -523,18 +546,18 @@ class ChatScreenState extends State<ChatScreen> {
               new IconButton(
                 icon: new Icon(Icons.camera_alt),
                 onPressed: (){},
-                color: Colors.blue,
+                color: black,
               ),
               new IconButton(
                 icon: new Icon(Icons.image),
                 onPressed: getImage,
-                color: Colors.blue,
+                color: black,
               ),
 
               new IconButton(
                 icon: new Icon(Icons.audiotrack),
                 onPressed: getImage,
-                color: Colors.blue,
+                color: black,
               ),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -544,17 +567,17 @@ class ChatScreenState extends State<ChatScreen> {
               new IconButton(
                 icon: new Icon(Icons.insert_drive_file),
                 onPressed: getImage,
-                color: Colors.blue,
+                color: black,
               ),
               new IconButton(
                 icon: new Icon(Icons.videocam),
                 onPressed: getImage,
-                color: Colors.blue,
+                color: black,
               ),
               new IconButton(
                 icon: new Icon(Icons.map),
                 onPressed: getImage,
-                color: Colors.blue,
+                color: black,
               ),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -596,7 +619,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.attach_file),
                 onPressed: getSticker,
-                color: Colors.blue,
+                color: black,
               ),
             ),
             color: Colors.white,
@@ -627,7 +650,7 @@ class ChatScreenState extends State<ChatScreen> {
               child: new IconButton(
                 icon: new Icon(Icons.send),
                 onPressed: () => onSendMessage(textEditingController.text, 0),
-                color: Colors.blue,
+                color: black,
               ),
             ),
             color: Colors.white,
@@ -678,5 +701,102 @@ class ChatScreenState extends State<ChatScreen> {
               },
             ),
     );
+  }
+  void deleteData(DocumentSnapshot doc) {
+    try {
+       Firestore.instance
+          .collection('messages')
+          .document("messbo")
+          .collection("messbo")
+          .document(doc.documentID).delete();
+
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<Null> openDialog(DocumentSnapshot document) async {
+    switch (await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            contentPadding: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
+            children: <Widget>[
+              Container(
+                color: black,
+                margin: EdgeInsets.all(0.0),
+                padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
+                height: 100.0,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      child: Icon(
+                        Icons.delete,
+                        size: 30.0,
+                        color: Colors.white,
+                      ),
+                      margin: EdgeInsets.only(bottom: 10.0),
+                    ),
+                    Text(
+                      'Delete or Reply',
+                      style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'Are you sure you want to delete message?',
+                      style: TextStyle(color: Colors.white70, fontSize: 14.0),
+                    ),
+                  ],
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+                  Navigator.pop(context, 0);
+                },
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      child: Icon(
+                        Icons.cancel,
+                        color: black,
+                      ),
+                      margin: EdgeInsets.only(right: 10.0),
+                    ),
+                    Text(
+                      'CANCEL',
+                      style: TextStyle(color: black, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: () {
+
+                  deleteData(document);
+                  Navigator.pop(context, 1);
+                },
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      child: Icon(
+                        Icons.check_circle,
+                        color: black,
+                      ),
+                      margin: EdgeInsets.only(right: 10.0),
+                    ),
+                    Text(
+                      'YES',
+                      style: TextStyle(color: black, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          );
+        })) {
+      case 0:
+        break;
+      case 1:
+        break;
+    }
   }
 }
