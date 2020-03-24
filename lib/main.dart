@@ -38,6 +38,9 @@ class MainScreenState extends State<MainScreen> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
+  Color black = Colors.black;
+
+
   bool isLoading = false;
   List<Choice> choices = const <Choice>[
     const Choice(title: 'Settings', icon: Icons.settings),
@@ -131,7 +134,7 @@ class MainScreenState extends State<MainScreen> {
             contentPadding: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
             children: <Widget>[
               Container(
-                color: Colors.blue,
+                color: black,
                 margin: EdgeInsets.all(0.0),
                 padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
                 height: 100.0,
@@ -165,13 +168,13 @@ class MainScreenState extends State<MainScreen> {
                     Container(
                       child: Icon(
                         Icons.cancel,
-                        color: Colors.blue,
+                        color: black,
                       ),
                       margin: EdgeInsets.only(right: 10.0),
                     ),
                     Text(
                       'CANCEL',
-                      style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -185,13 +188,13 @@ class MainScreenState extends State<MainScreen> {
                     Container(
                       child: Icon(
                         Icons.check_circle,
-                        color: Colors.blue,
+                        color: black,
                       ),
                       margin: EdgeInsets.only(right: 10.0),
                     ),
                     Text(
                       'YES',
-                      style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                      style: TextStyle(color: black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -232,7 +235,7 @@ class MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text(
           'MAIN',
-          style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+          style: TextStyle(color: black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: <Widget>[
@@ -246,14 +249,14 @@ class MainScreenState extends State<MainScreen> {
                       children: <Widget>[
                         Icon(
                           choice.icon,
-                          color: Colors.blue,
+                          color: black,
                         ),
                         Container(
                           width: 10.0,
                         ),
                         Text(
                           choice.title,
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: black),
                         ),
                       ],
                     ));
@@ -437,47 +440,30 @@ class _MyHomePageState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Color black = Colors.black;
+
     return MaterialApp(
 
         color: Colors.red,
         home: DefaultTabController(
             length: 2,
             child: Scaffold(
-              backgroundColor: Colors.blue,
+              backgroundColor: black ,
               appBar: AppBar(
                 elevation: 10,
-                backgroundColor: Colors.blue,
-                bottom: TabBar(
-                  indicatorColor: Colors.yellow,
-                  labelColor: Colors.yellowAccent,
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        "Message Board",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Tab(
-                      child: Text(
-                        "Private Message",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                backgroundColor: black,
 
-                  ],
-                ),
                 title: Text("Ultimax Alert",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.yellowAccent)),
                 centerTitle: true,
               ),
-              body: TabBarView(
-                children: <Widget>[                        Chat(
+              body: Chat(
                       peerId: peerId,
                       peerAvatar: peerAvatar,
-                    ), Private_Message()],
-              ),
+                    )
             )));
   }
 }
