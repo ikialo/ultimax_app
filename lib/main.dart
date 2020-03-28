@@ -12,11 +12,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/Private_Message.dart';
 
+import 'Settings.dart';
 import 'Tabs/UserSignIN.dart';
-
-
-
-
 
 
 void main() => runApp(MyApp());
@@ -88,7 +85,7 @@ class MainScreenState extends State<MainScreen> {
     if (choice.title == 'Log out') {
       handleSignOut();
     } else {
-      //Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
     }
   }
 
@@ -234,8 +231,8 @@ class MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'MAIN',
-          style: TextStyle(color: black, fontWeight: FontWeight.bold),
+          'ULTIMAX ALERT',
+          style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: <Widget>[
@@ -269,26 +266,48 @@ class MainScreenState extends State<MainScreen> {
         child: Stack(
           children: <Widget>[
             // List
-            Container(
-              child: StreamBuilder(
-                stream: Firestore.instance.collection('users').snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
-                      ),
-                    );
-                  } else {
-                    return ListView.builder(
-                      padding: EdgeInsets.all(10.0),
-                      itemBuilder: (context, index) => buildItem(context, snapshot.data.documents[index]),
-                      itemCount: snapshot.data.documents.length,
-                    );
-                  }
-                },
-              ),
-            ),
+//            Container(
+//              child: StreamBuilder(
+//                stream: Firestore.instance.collection('users').snapshots(),
+//                builder: (context, snapshot) {
+//                  if (!snapshot.hasData) {
+//                    return Center(
+//                      child: CircularProgressIndicator(
+//                        valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
+//                      ),
+//                    );
+//                  } else {
+//                    return ListView.builder(
+//                      padding: EdgeInsets.all(10.0),
+//                      itemBuilder: (context, index) => buildItem(context, snapshot.data.documents[index]),
+//                      itemCount: snapshot.data.documents.length,
+//                    );
+//                  }
+//                },
+//              ),
+//            ),
+
+            Container(child: Center(child: FlatButton(
+
+              child: Text("Open Chat", style: TextStyle(color: Colors.white),),
+              color: black,
+              onPressed: (){
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+//                        Chat(
+////                      peerId: document.documentID,
+////                      peerAvatar: document['photoUrl'],
+////                    )
+                      _MyHomePageState(
+                        peerId: "messageboardid",
+                        peerAvatar: 'photoUrl',
+                      )
+                  ));
+            },),),),
+
 
             // Loading
             Positioned(
@@ -300,7 +319,26 @@ class MainScreenState extends State<MainScreen> {
                 color: Colors.white.withOpacity(0.8),
               )
                   : Container(),
-            )
+            ),
+            Positioned(
+              right: 45.0,
+              bottom: 12.0,
+              child: Text("Developed by Synarc Systems", style: TextStyle(color: Colors.black),)
+            ),
+            Positioned(
+                right: 10.0,
+                bottom: 10.0,
+                child: Hero(
+                    tag: "DemoTag",
+                    child: Image.asset(
+                      'assets/icons/SYNARC.jpg',
+                      width: 25.0,
+                      height: 25.0,
+                      fit: BoxFit.cover,
+                    )
+                ),
+            ),
+
           ],
         ),
         onWillPop: onBackPress,

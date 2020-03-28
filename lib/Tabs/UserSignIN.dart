@@ -127,7 +127,9 @@ class LoginScreenState extends State<LoginScreen> {
 
       }
       );
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen(currentUserId: firebaseUser.uid)));
+      Navigator.push(context,  MaterialPageRoute(
+          builder: (context) => MainScreen(currentUserId: firebaseUser.uid))
+      );
     } else {
       Fluttertoast.showToast(msg: "Sign in fail");
       this.setState(() {
@@ -138,6 +140,8 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -148,6 +152,20 @@ class LoginScreenState extends State<LoginScreen> {
         ),
         body: Stack(
           children: <Widget>[
+            Positioned(
+              right: 10.0,
+              bottom: 12.0,
+              child: Hero(
+                  tag: "DemoTag",
+                  child: Image.asset(
+                    'assets/icons/SYNARC.jpg',
+                    width: 25.0,
+                    height: 25.0,
+                    fit: BoxFit.cover,
+                  )
+              ),
+            ),
+
             Center(
               child: FlatButton(
                   onPressed: handleSignIn,

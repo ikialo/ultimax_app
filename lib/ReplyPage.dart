@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,22 +7,31 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Reply extends StatelessWidget {
   final String message;
 
   final String senderID;
   final String senderImage;
 
-  var primaryColor = Colors.blue;
+  var primaryColor = Colors.black;
 
-  Reply({Key key, @required this.message, @required this.senderID, @required this.senderImage })
+  Reply(
+      {Key key,
+      @required this.message,
+      @required this.senderID,
+      @required this.senderImage})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(title: Text("Reply to"),),
+      appBar: AppBar(
+        title: Text(
+          "Reply to",
+          style: TextStyle(color: Colors.yellow),
+        ),
+        backgroundColor: Colors.black,
+      ),
       body: new ReplyPage(
         message: message,
         senderID: senderID,
@@ -34,21 +42,21 @@ class Reply extends StatelessWidget {
 }
 
 class ReplyPage extends StatefulWidget {
-
   final String message;
   final String senderID;
 
   final String senderImage;
 
-
-
-
-  ReplyPage({Key key, @required this.message, @required this.senderID, @required this.senderImage})
+  ReplyPage(
+      {Key key,
+      @required this.message,
+      @required this.senderID,
+      @required this.senderImage})
       : super(key: key);
 
   @override
-  State createState() =>
-      new _ReplyPageState(message: message, senderID: senderID, senderImage: senderImage);
+  State createState() => new _ReplyPageState(
+      message: message, senderID: senderID, senderImage: senderImage);
 }
 
 class _ReplyPageState extends State<ReplyPage> {
@@ -58,12 +66,13 @@ class _ReplyPageState extends State<ReplyPage> {
 
   Color themeColor = Colors.yellowAccent;
 
-  _ReplyPageState({Key key, @required this.message, @required this.senderID, @required this.senderImage});
+  _ReplyPageState(
+      {Key key,
+      @required this.message,
+      @required this.senderID,
+      @required this.senderImage});
 
-
-  var primaryColor = Colors.white;
-
-
+  var primaryColor = Colors.black;
 
   // sender ID and Sender Image are from the auther of the message being replied too
   String message;
@@ -82,7 +91,7 @@ class _ReplyPageState extends State<ReplyPage> {
   String SenderImage;
 
   final TextEditingController textEditingController =
-  new TextEditingController();
+      new TextEditingController();
   final ScrollController listScrollController = new ScrollController();
   final FocusNode focusNode = new FocusNode();
 
@@ -98,14 +107,13 @@ class _ReplyPageState extends State<ReplyPage> {
     imageUrl = '';
 
     readLocal();
-    }
+  }
 
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     ReplierImage = prefs.getString("photoUrl");
 
     id = prefs.getString('id') ?? '';
-
 
     Firestore.instance
         .collection('users')
@@ -123,8 +131,6 @@ class _ReplyPageState extends State<ReplyPage> {
       });
     }
   }
-
-
 
 //  Future getImage() async {
 //    imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -164,7 +170,6 @@ class _ReplyPageState extends State<ReplyPage> {
 //    });
 //  }
 
-
   void onSendMessage(String content, int type) {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
@@ -173,7 +178,8 @@ class _ReplyPageState extends State<ReplyPage> {
       var documentReference = Firestore.instance
           .collection('Replies')
           .document(senderID)
-          .collection(message.length < 255? message : message.substring(0,255))
+          .collection(
+              message.length < 255 ? message : message.substring(0, 255))
           .document(DateTime.now().millisecondsSinceEpoch.toString());
 
       Firestore.instance.runTransaction((transaction) async {
@@ -187,7 +193,6 @@ class _ReplyPageState extends State<ReplyPage> {
             'type': type,
             'SenderUrlImage': SenderImage,
             'ReplierImage': ReplierImage
-
           },
         );
       });
@@ -202,97 +207,90 @@ class _ReplyPageState extends State<ReplyPage> {
     if (document['idFrom'] == id) {
       // Right (my message)
       return Column(
-
         // Decides which type of post it is and shows accordingly
         children: <Widget>[
-          Row(
-              children: <Widget>[
-                document['type'] == 0
+          Row(children: <Widget>[
+            document['type'] == 0
                 // Text
-                    ? Container(
-                  child: Text(
-                    document['content'],
-                    style: TextStyle(color: primaryColor),
-                  ),
-                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                  width: 200.0,
-                  decoration: BoxDecoration(
-                      color: greyColor2,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  margin: EdgeInsets.only(
-                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                      right: 10.0),
-
-
-                )
-                    : document['type'] == 1
-                // Image
-                    ? Container(
-                  child: FlatButton(
-                    child: Material(
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) => Container(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                themeColor),
-                          ),
-                          width: 200.0,
-                          height: 200.0,
-                          padding: EdgeInsets.all(70.0),
-                          decoration: BoxDecoration(
-                            color: greyColor2,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) => Material(
-                          child: Image.asset(
-                            'images/img_not_available.jpeg',
-                            width: 200.0,
-                            height: 200.0,
-                            fit: BoxFit.cover,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8.0),
-                          ),
-                          clipBehavior: Clip.hardEdge,
-                        ),
-                        imageUrl: document['content'],
-                        width: 200.0,
-                        height: 200.0,
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(8.0)),
-                      clipBehavior: Clip.hardEdge,
+                ? Container(
+                    child: Text(
+                      document['content'],
+                      style: TextStyle(color: primaryColor),
                     ),
-                    onPressed: () {
+                    padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                    width: 200.0,
+                    decoration: BoxDecoration(
+                        color: greyColor2,
+                        borderRadius: BorderRadius.circular(8.0)),
+                    margin: EdgeInsets.only(
+                        bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                        right: 10.0),
+                  )
+                : document['type'] == 1
+                    // Image
+                    ? Container(
+                        child: FlatButton(
+                          child: Material(
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                child: CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(themeColor),
+                                ),
+                                width: 200.0,
+                                height: 200.0,
+                                padding: EdgeInsets.all(70.0),
+                                decoration: BoxDecoration(
+                                  color: greyColor2,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Material(
+                                child: Image.asset(
+                                  'images/img_not_available.jpeg',
+                                  width: 200.0,
+                                  height: 200.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                              ),
+                              imageUrl: document['content'],
+                              width: 200.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          onPressed: () {
 //                Navigator.push(
 //                    context, MaterialPageRoute(builder: (context) => FullPhoto(url: document['content'])));
-                    },
-                    padding: EdgeInsets.all(0),
-                  ),
-                  margin: EdgeInsets.only(
-                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                      right: 10.0),
-                )
-                // Sticker
+                          },
+                          padding: EdgeInsets.all(0),
+                        ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0),
+                      )
+                    // Sticker
                     : Container(
-                  child: new Image.asset(
-                    'images/${document['content']}.gif',
-                    width: 100.0,
-                    height: 100.0,
-                    fit: BoxFit.cover,
-                  ),
-                  margin: EdgeInsets.only(
-                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                      right: 10.0),
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.end
-
-          ),
+                        child: new Image.asset(
+                          'images/${document['content']}.gif',
+                          width: 100.0,
+                          height: 100.0,
+                          fit: BoxFit.cover,
+                        ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0),
+                      ),
+          ], mainAxisAlignment: MainAxisAlignment.end),
 
           // TIme under the messages
           Container(
@@ -308,13 +306,11 @@ class _ReplyPageState extends State<ReplyPage> {
             margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
           )
         ],
-
-
       );
     } else {
       // Left (peer message)
       return GestureDetector(
-        child:Container(
+        child: Container(
           child: Column(
             children: <Widget>[
               Row(
@@ -349,78 +345,80 @@ class _ReplyPageState extends State<ReplyPage> {
                   // Chooses the tyoe of message and shows accordingly
                   document['type'] == 0
                       ? Container(
-                    child: Text(
-                      document['content'],
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    width: 200.0,
-                    decoration: BoxDecoration(
-                        color: Colors.blueGrey,
-                        borderRadius: BorderRadius.circular(8.0)),
-                    margin: EdgeInsets.only(left: 10.0),
-                  )
-                      : document['type'] == 1
-                      ? Container(
-                    child: FlatButton(
-                      child: Material(
-                        child: CachedNetworkImage(
-                          placeholder: (context, url) => Container(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  themeColor),
-                            ),
-                            width: 200.0,
-                            height: 200.0,
-                            padding: EdgeInsets.all(70.0),
-                            decoration: BoxDecoration(
-                              color: greyColor2,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                            ),
+                          child: Text(
+                            document['content'],
+                            style: TextStyle(color: Colors.white),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Material(
-                                child: Image.asset(
-                                  'images/img_not_available.jpeg',
-                                  width: 200.0,
-                                  height: 200.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                              ),
-                          imageUrl: document['content'],
+                          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                           width: 200.0,
-                          height: 200.0,
-                          fit: BoxFit.cover,
-                        ),
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(8.0)),
-                        clipBehavior: Clip.hardEdge,
-                      ),
-                      onPressed: () {
+                          decoration: BoxDecoration(
+                              color: Colors.blueGrey,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          margin: EdgeInsets.only(left: 10.0),
+                        )
+                      : document['type'] == 1
+                          ? Container(
+                              child: FlatButton(
+                                child: Material(
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                themeColor),
+                                      ),
+                                      width: 200.0,
+                                      height: 200.0,
+                                      padding: EdgeInsets.all(70.0),
+                                      decoration: BoxDecoration(
+                                        color: greyColor2,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Material(
+                                      child: Image.asset(
+                                        'images/img_not_available.jpeg',
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                    imageUrl: document['content'],
+                                    width: 200.0,
+                                    height: 200.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                onPressed: () {
 //                      Navigator.push(context,
 //                          MaterialPageRoute(builder: (context) => FullPhoto(url: document['content'])));
-                      },
-                      padding: EdgeInsets.all(0),
-                    ),
-                    margin: EdgeInsets.only(left: 10.0),
-                  )
-                      : Container(
-                    child: new Image.asset(
-                      'images/${document['content']}.gif',
-                      width: 100.0,
-                      height: 100.0,
-                      fit: BoxFit.cover,
-                    ),
-                    margin: EdgeInsets.only(
-                        bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                        right: 10.0),
-                  ),
+                                },
+                                padding: EdgeInsets.all(0),
+                              ),
+                              margin: EdgeInsets.only(left: 10.0),
+                            )
+                          : Container(
+                              child: new Image.asset(
+                                'images/${document['content']}.gif',
+                                width: 100.0,
+                                height: 100.0,
+                                fit: BoxFit.cover,
+                              ),
+                              margin: EdgeInsets.only(
+                                  bottom:
+                                      isLastMessageRight(index) ? 20.0 : 10.0,
+                                  right: 10.0),
+                            ),
                 ],
               ),
 
@@ -446,12 +444,10 @@ class _ReplyPageState extends State<ReplyPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
           ),
           margin: EdgeInsets.only(bottom: 10.0),
-        ) ,
-        onLongPress: (){
+        ),
+        onLongPress: () {
           Scaffold.of(context).showSnackBar(SnackBar(
             content: Text("Pressed stuuff"),
-
-
           ));
 //
 //          Navigator.push(
@@ -468,8 +464,8 @@ class _ReplyPageState extends State<ReplyPage> {
 
   bool isLastMessageLeft(int index) {
     if ((index > 0 &&
-        listMessage != null &&
-        listMessage[index - 1]['idFrom'] == id) ||
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] == id) ||
         index == 0) {
       return true;
     } else {
@@ -479,8 +475,8 @@ class _ReplyPageState extends State<ReplyPage> {
 
   bool isLastMessageRight(int index) {
     if ((index > 0 &&
-        listMessage != null &&
-        listMessage[index - 1]['idFrom'] != id) ||
+            listMessage != null &&
+            listMessage[index - 1]['idFrom'] != id) ||
         index == 0) {
       return true;
     } else {
@@ -511,6 +507,7 @@ class _ReplyPageState extends State<ReplyPage> {
         children: <Widget>[
           Column(
             children: <Widget>[
+              messageToReply(),
               // List of messages
               buildListMessage(),
 
@@ -530,6 +527,29 @@ class _ReplyPageState extends State<ReplyPage> {
     );
   }
 
+  Widget messageToReply() {
+    return Container(
+      child: Padding(
+              padding: EdgeInsets.only(left: 5, top: 3),
+              child: Container(
+                child: Text(
+                  message.length < 50 ? message: message.substring(0,255),
+                  style: TextStyle(color: Colors.black, fontSize: 12.0),
+                ),
+              ),
+            ),
+
+
+      width: double.infinity,
+      height: message.length < 255 ? 50.0: 70.0,
+      decoration: new BoxDecoration(
+          //borderRadius: BorderRadius.circular(8.0),
+          border:
+              new Border(top: new BorderSide(color: Colors.yellow, width: 0.5)),
+          color: Colors.black12),
+    );
+  }
+
   Widget buildSticker() {
     return Container(
       child: Column(
@@ -538,19 +558,18 @@ class _ReplyPageState extends State<ReplyPage> {
             children: <Widget>[
               new IconButton(
                 icon: new Icon(Icons.camera_alt),
-                onPressed: (){},
-                color: Colors.blue,
+                onPressed: () {},
+                color: primaryColor,
               ),
               new IconButton(
                 icon: new Icon(Icons.image),
-                onPressed: (){},
-                color: Colors.blue,
+                onPressed: () {},
+                color: primaryColor,
               ),
-
               new IconButton(
                 icon: new Icon(Icons.audiotrack),
-                onPressed: (){},
-                color: Colors.blue,
+                onPressed: () {},
+                color: primaryColor,
               ),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -559,18 +578,18 @@ class _ReplyPageState extends State<ReplyPage> {
             children: <Widget>[
               new IconButton(
                 icon: new Icon(Icons.insert_drive_file),
-                onPressed: (){},
-                color: Colors.blue,
+                onPressed: () {},
+                color: primaryColor,
               ),
               new IconButton(
                 icon: new Icon(Icons.videocam),
-                onPressed: (){},
-                color: Colors.blue,
+                onPressed: () {},
+                color: primaryColor,
               ),
               new IconButton(
                 icon: new Icon(Icons.map),
-                onPressed: (){},
-                color: Colors.blue,
+                onPressed: () {},
+                color: primaryColor,
               ),
             ],
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -580,7 +599,7 @@ class _ReplyPageState extends State<ReplyPage> {
       ),
       decoration: new BoxDecoration(
           border:
-          new Border(top: new BorderSide(color: greyColor2, width: 0.5)),
+              new Border(top: new BorderSide(color: greyColor2, width: 0.5)),
           color: Colors.white70),
       padding: EdgeInsets.all(5.0),
       height: 180.0,
@@ -591,12 +610,12 @@ class _ReplyPageState extends State<ReplyPage> {
     return Positioned(
       child: isLoading
           ? Container(
-        child: Center(
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
-        ),
-        color: Colors.white.withOpacity(0.8),
-      )
+              child: Center(
+                child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red)),
+              ),
+              color: Colors.white.withOpacity(0.8),
+            )
           : Container(),
     );
   }
@@ -612,7 +631,7 @@ class _ReplyPageState extends State<ReplyPage> {
               child: new IconButton(
                 icon: new Icon(Icons.attach_file),
                 onPressed: getSticker,
-                color: Colors.blue,
+                color: primaryColor,
               ),
             ),
             color: Colors.white,
@@ -643,7 +662,7 @@ class _ReplyPageState extends State<ReplyPage> {
               child: new IconButton(
                 icon: new Icon(Icons.send),
                 onPressed: () => onSendMessage(textEditingController.text, 0),
-                color: Colors.blue,
+                color: primaryColor,
               ),
             ),
             color: Colors.white,
@@ -654,7 +673,7 @@ class _ReplyPageState extends State<ReplyPage> {
       height: 50.0,
       decoration: new BoxDecoration(
           border:
-          new Border(top: new BorderSide(color: greyColor2, width: 0.5)),
+              new Border(top: new BorderSide(color: greyColor2, width: 0.5)),
           color: Colors.white),
     );
   }
@@ -663,39 +682,37 @@ class _ReplyPageState extends State<ReplyPage> {
     return Flexible(
       child: groupChatId != ''
           ? Center(
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
           : StreamBuilder(
-        stream: Firestore.instance
-            .collection('Replies')
-            .document(senderID)
-            .collection(message.length < 255? message : message.substring(0,255))
-            .orderBy('timestamp', descending: true)
-            .limit(20)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-
-
-            return Center(
-                child: CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.purple)));
-          } else {
-
-            listMessage = snapshot.data.documents;
-            return ListView.builder(
-              padding: EdgeInsets.all(10.0),
-              itemBuilder: (context, index) =>
-                  buildItem(index, snapshot.data.documents[index]),
-              itemCount: snapshot.data.documents.length,
-              reverse: true,
-              controller: listScrollController,
-
-            );
-          }
-        },
-      ),
+              stream: Firestore.instance
+                  .collection('Replies')
+                  .document(senderID)
+                  .collection(message.length < 255
+                      ? message
+                      : message.substring(0, 255))
+                  .orderBy('timestamp', descending: true)
+                  .limit(20)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.purple)));
+                } else {
+                  listMessage = snapshot.data.documents;
+                  return ListView.builder(
+                    padding: EdgeInsets.all(10.0),
+                    itemBuilder: (context, index) =>
+                        buildItem(index, snapshot.data.documents[index]),
+                    itemCount: snapshot.data.documents.length,
+                    reverse: true,
+                    controller: listScrollController,
+                  );
+                }
+              },
+            ),
     );
   }
 }
