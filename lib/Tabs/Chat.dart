@@ -50,6 +50,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   Color black = Colors.black;
 
+
   ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar});
 
   var primaryColor = Colors.white;
@@ -69,6 +70,7 @@ class ChatScreenState extends State<ChatScreen> {
   String imageUrl;
   String SenderImage;
   bool admin;
+  String userName;
 
   final TextEditingController textEditingController =
       new TextEditingController();
@@ -102,7 +104,7 @@ class ChatScreenState extends State<ChatScreen> {
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     SenderImage = prefs.getString("photoUrl");
-
+    userName = prefs.getString("nickname");
     admin = prefs.getBool("admin");
 
     id = prefs.getString('id') ?? '';
@@ -178,7 +180,8 @@ class ChatScreenState extends State<ChatScreen> {
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
             'type': type,
-            'SenderUrlImage': SenderImage
+            'SenderUrlImage': SenderImage,
+            'nickname': userName
           },
         );
       });
@@ -190,100 +193,96 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
+
+
+
     if (document['idFrom'] == id) {
       // Right (my message)
       return Column(
-
         // Decides which type of post it is and shows accordingly
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              document['type'] == 0
-                  // Text
-                  ? Container(
-                      child: Text(
-                        document['content'],
-                        style: TextStyle(color: primaryColor),
-                      ),
-                      padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                      width: 200.0,
-                      decoration: BoxDecoration(
-                          color: greyColor2,
-                          borderRadius: BorderRadius.circular(8.0)),
-                      margin: EdgeInsets.only(
-                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                          right: 10.0),
-
-
-                    )
-                  : document['type'] == 1
-                      // Image
-                      ? Container(
-                          child: FlatButton(
-                            child: Material(
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        themeColor),
-                                  ),
-                                  width: 200.0,
-                                  height: 200.0,
-                                  padding: EdgeInsets.all(70.0),
-                                  decoration: BoxDecoration(
-                                    color: greyColor2,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
-                                    ),
-                                  ),
+          Row(children: <Widget>[
+            document['type'] == 0
+                // Text
+                ? Container(
+                    child: Text(
+                      document['content'],
+                      style: TextStyle(color: primaryColor),
+                    ),
+                    padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                    width: 200.0,
+                    decoration: BoxDecoration(
+                        color: greyColor2,
+                        borderRadius: BorderRadius.circular(8.0)),
+                    margin: EdgeInsets.only(
+                        bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                        right: 10.0),
+                  )
+                : document['type'] == 1
+                    // Image
+                    ? Container(
+                        child: FlatButton(
+                          child: Material(
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                child: CircularProgressIndicator(
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(themeColor),
                                 ),
-                                errorWidget: (context, url, error) => Material(
-                                  child: Image.asset(
-                                    'images/img_not_available.jpeg',
-                                    width: 200.0,
-                                    height: 200.0,
-                                    fit: BoxFit.cover,
-                                  ),
+                                width: 200.0,
+                                height: 200.0,
+                                padding: EdgeInsets.all(70.0),
+                                decoration: BoxDecoration(
+                                  color: greyColor2,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(8.0),
                                   ),
-                                  clipBehavior: Clip.hardEdge,
                                 ),
-                                imageUrl: document['content'],
-                                width: 200.0,
-                                height: 200.0,
-                                fit: BoxFit.cover,
                               ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
-                              clipBehavior: Clip.hardEdge,
+                              errorWidget: (context, url, error) => Material(
+                                child: Image.asset(
+                                  'images/img_not_available.jpeg',
+                                  width: 200.0,
+                                  height: 200.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                              ),
+                              imageUrl: document['content'],
+                              width: 200.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
                             ),
-                            onPressed: () {
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(8.0)),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+                          onPressed: () {
 //                Navigator.push(
 //                    context, MaterialPageRoute(builder: (context) => FullPhoto(url: document['content'])));
-                            },
-                            padding: EdgeInsets.all(0),
-                          ),
-                          margin: EdgeInsets.only(
-                              bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                              right: 10.0),
-                        )
-                      // Sticker
-                      : Container(
-                          child: new Image.asset(
-                            'images/${document['content']}.gif',
-                            width: 100.0,
-                            height: 100.0,
-                            fit: BoxFit.cover,
-                          ),
-                          margin: EdgeInsets.only(
-                              bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                              right: 10.0),
+                          },
+                          padding: EdgeInsets.all(0),
                         ),
-            ],
-              mainAxisAlignment: MainAxisAlignment.end
-
-          ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0),
+                      )
+                    // Sticker
+                    : Container(
+                        child: new Image.asset(
+                          'images/${document['content']}.gif',
+                          width: 100.0,
+                          height: 100.0,
+                          fit: BoxFit.cover,
+                        ),
+                        margin: EdgeInsets.only(
+                            bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                            right: 10.0),
+                      ),
+          ], mainAxisAlignment: MainAxisAlignment.end),
 
           // TIme under the messages
           Container(
@@ -299,174 +298,165 @@ class ChatScreenState extends State<ChatScreen> {
             margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
           )
         ],
-
-
       );
     } else {
       // Left (peer message)
+
+
       return GestureDetector(
-        child:Container(
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
+        child: Container(
+          child: Column(
+
+            children: <Widget>[
+
+              Container(
+                child: Text(document['nickname'],
+                  style: TextStyle(
+                      color: greyColor2,
+                      fontSize: 12.0,
+                      fontStyle: FontStyle.italic),
+                ),
+                margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+              ),
+              Row(
+                children: <Widget>[
 //                isLastMessageLeft(index)
 //                    ?
 
-                // Other users profileImage
-                Material(
-                  child: CachedNetworkImage(
-                    placeholder: (context, url) => Container(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 1.0,
-                        valueColor: AlwaysStoppedAnimation<Color>(themeColor),
+                  // Other users profileImage
+                  Material(
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => Container(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1.0,
+                          valueColor: AlwaysStoppedAnimation<Color>(themeColor),
+                        ),
+                        width: 35.0,
+                        height: 35.0,
+                        padding: EdgeInsets.all(10.0),
                       ),
+                      imageUrl: document['SenderUrlImage'],
                       width: 35.0,
                       height: 35.0,
-                      padding: EdgeInsets.all(10.0),
+                      fit: BoxFit.cover,
                     ),
-                    imageUrl: document['SenderUrlImage'],
-                    width: 35.0,
-                    height: 35.0,
-                    fit: BoxFit.cover,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(18.0),
+                    ),
+                    clipBehavior: Clip.hardEdge,
                   ),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(18.0),
-                  ),
-                  clipBehavior: Clip.hardEdge,
-                ),
 //                    : Container(width: 35.0),
 
-                // Chooses the tyoe of message and shows accordingly
-                document['type'] == 0
-                    ? Container(
-                  child: Text(
-                    document['content'],
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                  width: 200.0,
-                  decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  margin: EdgeInsets.only(left: 10.0),
-                )
-                    : document['type'] == 1
-                    ? Container(
-                  child: FlatButton(
-                    child: Material(
-                      child: CachedNetworkImage(
-                        placeholder: (context, url) => Container(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                themeColor),
+                  // Chooses the tyoe of message and shows accordingly
+                  document['type'] == 0
+                      ? Container(
+                          child: Text(
+                            document['content'],
+                            style: TextStyle(color: Colors.white),
                           ),
+                          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                           width: 200.0,
-                          height: 200.0,
-                          padding: EdgeInsets.all(70.0),
                           decoration: BoxDecoration(
-                            color: greyColor2,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                          ),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            Material(
-                              child: Image.asset(
-                                'images/img_not_available.jpeg',
-                                width: 200.0,
-                                height: 200.0,
-                                fit: BoxFit.cover,
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
-                              ),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                        imageUrl: document['content'],
-                        width: 200.0,
-                        height: 200.0,
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius:
-                      BorderRadius.all(Radius.circular(8.0)),
-                      clipBehavior: Clip.hardEdge,
-                    ),
-                    onPressed: () {
+                              color: Colors.blueGrey,
+                              borderRadius: BorderRadius.circular(8.0)),
+                          margin: EdgeInsets.only(left: 10.0),
+                        )
+                      : document['type'] == 1
+                          ? Container(
+                              child: FlatButton(
+                                child: Material(
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                themeColor),
+                                      ),
+                                      width: 200.0,
+                                      height: 200.0,
+                                      padding: EdgeInsets.all(70.0),
+                                      decoration: BoxDecoration(
+                                        color: greyColor2,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Material(
+                                      child: Image.asset(
+                                        'images/img_not_available.jpeg',
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                    imageUrl: document['content'],
+                                    width: 200.0,
+                                    height: 200.0,
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(8.0)),
+                                  clipBehavior: Clip.hardEdge,
+                                ),
+                                onPressed: () {
 //                      Navigator.push(context,
 //                          MaterialPageRoute(builder: (context) => FullPhoto(url: document['content'])));
-                    },
-                    padding: EdgeInsets.all(0),
-                  ),
-                  margin: EdgeInsets.only(left: 10.0),
-                )
-                    : Container(
-                  child: new Image.asset(
-                    'images/${document['content']}.gif',
-                    width: 100.0,
-                    height: 100.0,
-                    fit: BoxFit.cover,
-                  ),
-                  margin: EdgeInsets.only(
-                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                      right: 10.0),
-                ),
-              ],
-            ),
-
-            // Time
-//            isLastMessageLeft(index)
-//                ?
-
-            // shows time at the end of the message
-            Container(
-              child: Text(
-                DateFormat('dd MMM kk:mm').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(document['timestamp']))),
-                style: TextStyle(
-                    color: greyColor2,
-                    fontSize: 12.0,
-                    fontStyle: FontStyle.italic),
+                                },
+                                padding: EdgeInsets.all(0),
+                              ),
+                              margin: EdgeInsets.only(left: 10.0),
+                            )
+                          : Container(
+                              child: new Image.asset(
+                                'images/${document['content']}.gif',
+                                width: 100.0,
+                                height: 100.0,
+                                fit: BoxFit.cover,
+                              ),
+                              margin: EdgeInsets.only(
+                                  bottom:
+                                      isLastMessageRight(index) ? 20.0 : 10.0,
+                                  right: 10.0),
+                            ),
+                ],
               ),
-              margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-            )
-//                : Container()
-          ],
-          crossAxisAlignment: CrossAxisAlignment.start,
+
+              Container(
+                child: Text(
+                  DateFormat('dd MMM kk:mm').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(document['timestamp']))),
+                  style: TextStyle(
+                      color: greyColor2,
+                      fontSize: 12.0,
+                      fontStyle: FontStyle.italic),
+                ),
+                margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+              )
+            ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+          ),
+          margin: EdgeInsets.only(bottom: 10.0),
         ),
-        margin: EdgeInsets.only(bottom: 10.0),
-      ) ,
-        onTap: (){
+        onTap: () {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-
-                      Reply(message: document['content'],
-                          senderID: document['idFrom'],
-                          senderImage: document['senderImage'])
-              ));
+                  builder: (context) => Reply(
+                      message: document['content'],
+                      senderID: document['idFrom'],
+                      senderImage: document['senderImage'])));
         },
-
-        onLongPress: (){
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text("Pressed stuuff"),
-
-
-          ));
-
-
+        onLongPress: () {
           if (!admin) {
-
-          }else{
+          } else {
             openDialog(document);
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(" you are admin"),
-
-
-            ));
           }
         },
       );
@@ -545,7 +535,7 @@ class ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               new IconButton(
                 icon: new Icon(Icons.camera_alt),
-                onPressed: (){},
+                onPressed: () {},
                 color: black,
               ),
               new IconButton(
@@ -553,7 +543,6 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: getImage,
                 color: black,
               ),
-
               new IconButton(
                 icon: new Icon(Icons.audiotrack),
                 onPressed: getImage,
@@ -695,21 +684,21 @@ class ChatScreenState extends State<ChatScreen> {
                     itemCount: snapshot.data.documents.length,
                     reverse: true,
                     controller: listScrollController,
-
                   );
                 }
               },
             ),
     );
   }
+
   void deleteData(DocumentSnapshot doc) {
     try {
-       Firestore.instance
+      Firestore.instance
           .collection('messages')
           .document("messbo")
           .collection("messbo")
-          .document(doc.documentID).delete();
-
+          .document(doc.documentID)
+          .delete();
     } catch (e) {
       print(e.toString());
     }
@@ -720,7 +709,8 @@ class ChatScreenState extends State<ChatScreen> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            contentPadding: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
+            contentPadding:
+                EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
             children: <Widget>[
               Container(
                 color: black,
@@ -738,8 +728,11 @@ class ChatScreenState extends State<ChatScreen> {
                       margin: EdgeInsets.only(bottom: 10.0),
                     ),
                     Text(
-                      'Delete or Reply',
-                      style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                      'Delete',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Are you sure you want to delete message?',
@@ -763,14 +756,14 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                     Text(
                       'CANCEL',
-                      style: TextStyle(color: black, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(color: black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
               ),
               SimpleDialogOption(
                 onPressed: () {
-
                   deleteData(document);
                   Navigator.pop(context, 1);
                 },
@@ -785,7 +778,8 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                     Text(
                       'YES',
-                      style: TextStyle(color: black, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(color: black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -799,4 +793,20 @@ class ChatScreenState extends State<ChatScreen> {
         break;
     }
   }
+
+// void getUserName(DocumentSnapshot doc) async {
+//
+//    String nick;
+//    Firestore.instance
+//        .collection("users")
+//        .document(doc['idFrom']).get().then((DocumentSnapshot ds){
+//
+//          nick= ds["nickname"];
+//
+//          userName = nick;
+//    });
+//
+//
+//
+//  }
 }

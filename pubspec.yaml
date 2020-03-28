@@ -35,12 +35,21 @@ dependencies:
   firebase_messaging: ^5.1.6
   flutter_local_notifications: ^0.8.4
   photo_view: ^0.5.0
+  flutter_launcher_icons: ^0.7.4
+
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "assets/icons/photo.jpg"
+  image_path_android: "assets/icons/photo.jpg"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -56,6 +65,10 @@ flutter:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
+
+  assets:
+    - "assets/icons/photo.jpg"
+    - "assets/icons/SYNARC.jpg"
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
