@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../CustomCurve.dart';
 import '../main.dart';
 
 class MyApp extends StatelessWidget {
@@ -58,7 +59,9 @@ class LoginScreenState extends State<LoginScreen> {
     if (isLoggedIn) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MainScreen(currentUserId: prefs.getString('id'))),
+        MaterialPageRoute(
+            builder: (context) =>
+                MainScreen(currentUserId: prefs.getString('id'))),
       );
     }
 
@@ -82,25 +85,28 @@ class LoginScreenState extends State<LoginScreen> {
       idToken: googleAuth.idToken,
     );
 
-    FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
-
+    FirebaseUser firebaseUser =
+        (await firebaseAuth.signInWithCredential(credential)).user;
 
     if (firebaseUser != null) {
       // Check is already sign up
-      final QuerySnapshot result =
-      await Firestore.instance.collection('users').where('id', isEqualTo: firebaseUser.uid).getDocuments();
+      final QuerySnapshot result = await Firestore.instance
+          .collection('users')
+          .where('id', isEqualTo: firebaseUser.uid)
+          .getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
       if (documents.length == 0) {
         // Update data to server if new user
-        Firestore.instance.collection('users').document(firebaseUser.uid).setData({
+        Firestore.instance
+            .collection('users')
+            .document(firebaseUser.uid)
+            .setData({
           'nickname': firebaseUser.displayName,
           'photoUrl': firebaseUser.photoUrl,
           'id': firebaseUser.uid,
           'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
           'chattingWith': null
         });
-
-
 
         // Write data to local
         currentUser = firebaseUser;
@@ -119,17 +125,13 @@ class LoginScreenState extends State<LoginScreen> {
         isLoading = false;
       });
 
-      firebaseUser.getIdToken(refresh: true).then((idToken) => {
-        
-        prefs.setBool("admin", idToken.claims.containsKey("admin"))
-
-
-
-      }
-      );
-      Navigator.push(context,  MaterialPageRoute(
-          builder: (context) => MainScreen(currentUserId: firebaseUser.uid))
-      );
+      firebaseUser.getIdToken(refresh: true).then((idToken) =>
+          {prefs.setBool("admin", idToken.claims.containsKey("admin"))});
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MainScreen(currentUserId: firebaseUser.uid)));
     } else {
       Fluttertoast.showToast(msg: "Sign in fail");
       this.setState(() {
@@ -140,57 +142,137 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            widget.title,
-            style: TextStyle(color:Colors.black, fontWeight: FontWeight.bold),
-          ),
-          centerTitle: true,
-        ),
+        backgroundColor: Colors.black12,
         body: Stack(
           children: <Widget>[
+//            Align(alignment: Alignment.topCenter,
+//             child : CustomPaint( child: Container(        height: 200.0,
+////               decoration: BoxDecoration(
+////                   gradient: LinearGradient(
+////
+////                       colors: [Colors.blue, Colors.red])),
+////
+//            ),
+//               painter: CurvePainter(),
+//            ),),
+
+            Align(
+                alignment: Alignment.topCenter,
+                child: Image.asset(
+                  'assets/icons/topdec.png',
+                  width: 700,
+                  height: 150.0,
+                  fit: BoxFit.fitWidth,
+                )),
+
+
+
             Positioned(
-              right: 10.0,
-              bottom: 12.0,
-              child: Hero(
-                  tag: "DemoTag",
-                  child: Image.asset(
-                    'assets/icons/SYNARC.jpg',
-                    width: 25.0,
-                    height: 25.0,
-                    fit: BoxFit.cover,
-                  )
+              top: 70,
+              left: 50,
+              child: Text(
+                "SIGN IN",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                ),
               ),
             ),
 
-            Center(
-              child: FlatButton(
-                  onPressed: handleSignIn,
-                  child: Text(
-                    'SIGN IN WITH GOOGLE',
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  color: Colors.black,
-                  highlightColor: Color(0xffff7f7f),
-                  splashColor: Colors.transparent,
-                  textColor: Colors.white,
-                  padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)),
+
+            Positioned(
+                right: 45.0,
+                bottom: 12.0,
+                child: Text("Developed by Synarc Systems", style: TextStyle(color: Colors.white, fontSize: 10.0),)
             ),
+            Positioned(
+                right: 10.0,
+                bottom: 12.0,
+                child: Hero(
+                  tag: "DemoTag",
+                  child:ClipRRect(
+                      borderRadius: BorderRadius.circular(50.0),
+
+                      child: Image.asset(
+                        'assets/icons/SYNARC.jpg',
+                        width: 18.0,
+                        height: 18.0,
+                        fit: BoxFit.cover,
+                      )),)
+            ),
+
+
+
+            Opacity(
+              opacity: 1,
+              child: Padding(
+                padding: EdgeInsets.only(top: 120.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Hero(
+                    tag: "ultimax+logo",
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/photo.jpg',
+                          width: 100,
+                          height: 100.0,
+                          fit: BoxFit.cover,
+                        )),
+                  ),
+                ),
+              ),
+            ),
+
+            Align(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.all(5),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(50.0),
+                          child: Image.asset(
+                            'assets/icons/google_icon.png',
+                            width: 25,
+                            height: 25.0,
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                    RaisedButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(25.0),
+                            side: BorderSide(color: Colors.red)),
+                        elevation: 8,
+                        onPressed: handleSignIn,
+                        child: Text(
+                          'SIGN IN WITH GOOGLE',
+                          style: TextStyle(
+                            fontSize: 13.0,
+                          ),
+                        ),
+                        color: Color(0xff000066),
+                        highlightColor: Color(0xffff7f7f),
+                        splashColor: Colors.transparent,
+                        textColor: Colors.white,
+                        padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)),
+                  ],
+                )),
 
             // Loading
             Positioned(
               child: isLoading
                   ? Container(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                  ),
-                ),
-                color: Colors.white.withOpacity(0.8),
-              )
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.blue),
+                        ),
+                      ),
+                      color: Colors.white.withOpacity(0.8),
+                    )
                   : Container(),
             ),
           ],

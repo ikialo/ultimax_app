@@ -9,12 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ultimax2/TabParent.dart';
+import 'package:ultimax2/Tabs/CallNumbers.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/Private_Message.dart';
 
 import 'Settings.dart';
 import 'Tabs/UserSignIN.dart';
-
 
 void main() => runApp(MyApp());
 
@@ -32,8 +34,11 @@ class MainScreenState extends State<MainScreen> {
 
   final String currentUserId;
   final FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      new FlutterLocalNotificationsPlugin();
   final GoogleSignIn googleSignIn = GoogleSignIn();
+
+  SharedPreferences prefs;
 
   Color black = Colors.black;
 
@@ -49,9 +54,21 @@ class MainScreenState extends State<MainScreen> {
     super.initState();
     registerNotification();
     configLocalNotification();
+
+
   }
 
-  void registerNotification() {
+  
+  Future<void> registerNotification() async {
+
+    prefs = await SharedPreferences.getInstance();
+
+    firebaseMessaging.subscribeToTopic("alert").then((res) {
+      print("is subscribed");
+    }).catchError((onError) {
+      print("error");
+    });
+
     firebaseMessaging.requestNotificationPermissions();
 
     firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
@@ -68,54 +85,63 @@ class MainScreenState extends State<MainScreen> {
 
     firebaseMessaging.getToken().then((token) {
       print('token: $token');
-      Firestore.instance.collection('users').document(currentUserId).updateData({'pushToken': token});
+      Firestore.instance
+          .collection('users')
+          .document(currentUserId)
+          .updateData({'pushToken': token});
     }).catchError((err) {
       Fluttertoast.showToast(msg: err.message.toString());
     });
   }
 
   void configLocalNotification() {
-    var initializationSettingsAndroid = new AndroidInitializationSettings('app_icon');
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+
   }
 
+  
+  
   void onItemMenuPress(Choice choice) {
     if (choice.title == 'Log out') {
       handleSignOut();
     } else {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Settings()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Settings()));
     }
   }
 
-  void CreateMessageBoard(){
-
+  void CreateMessageBoard() {
     String groupChatId = "messbo";
     var documentReference = Firestore.instance
         .collection('MessageBoard')
         .document(groupChatId)
         .collection(groupChatId)
         .document(DateTime.now().millisecondsSinceEpoch.toString());
-
   }
 
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
-     'synarcsystems.com.ultimax2',
-      'Flutter chat demo',
+      'synarcsystems.com.ultimax2',
+      'Ultimax',
       'your channel description',
       playSound: true,
       enableVibration: true,
       importance: Importance.Max,
       priority: Priority.High,
+      channelShowBadge: true,
     );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics =
-    new NotificationDetails(androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-        0, message['title'].toString(), message['body'].toString(), platformChannelSpecifics,
-        payload: json.encode(message));
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(0, message['title'].toString(),
+        message['body'].toString(), platformChannelSpecifics,
+        payload: 'Default_Sound');
   }
 
   Future<bool> onBackPress() {
@@ -128,7 +154,8 @@ class MainScreenState extends State<MainScreen> {
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            contentPadding: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
+            contentPadding:
+                EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
             children: <Widget>[
               Container(
                 color: black,
@@ -147,7 +174,10 @@ class MainScreenState extends State<MainScreen> {
                     ),
                     Text(
                       'Exit app',
-                      style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Are you sure to exit app?',
@@ -171,7 +201,8 @@ class MainScreenState extends State<MainScreen> {
                     ),
                     Text(
                       'CANCEL',
-                      style: TextStyle(color: black, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(color: black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -191,7 +222,8 @@ class MainScreenState extends State<MainScreen> {
                     ),
                     Text(
                       'YES',
-                      style: TextStyle(color: black, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(color: black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -220,19 +252,19 @@ class MainScreenState extends State<MainScreen> {
       isLoading = false;
     });
 
-    Navigator.of(context)
-        .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MyApp()), (Route<dynamic> route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => MyApp()),
+        (Route<dynamic> route) => false);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black12,
       appBar: AppBar(
         title: Text(
           'ULTIMAX ALERT',
-          style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: <Widget>[
@@ -265,6 +297,51 @@ class MainScreenState extends State<MainScreen> {
       body: WillPopScope(
         child: Stack(
           children: <Widget>[
+
+
+
+            Align(
+                alignment: Alignment.topCenter,
+                child: Image.asset(
+                  'assets/icons/topdec.png',
+                  width: 700,
+                  height: 150.0,
+                  fit: BoxFit.fitWidth,
+                )),
+
+            GestureDetector(
+              child: Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Hero(
+                    tag: "ultimax+logo",
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/photo.jpg',
+                          width: 100,
+                          height: 100.0,
+                          fit: BoxFit.cover,
+                        )),
+                  ),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+//                        Chat(
+////                      peerId: document.documentID,
+////                      peerAvatar: document['photoUrl'],
+////                    )
+                            _MyHomePageState(
+                              peerId: "messageboardid",
+                              peerAvatar: 'photoUrl',
+                            )));
+              },
+            ),
             // List
 //            Container(
 //              child: StreamBuilder(
@@ -287,58 +364,79 @@ class MainScreenState extends State<MainScreen> {
 //              ),
 //            ),
 
-            Container(child: Center(child: FlatButton(
-
-              child: Text("Open Chat", style: TextStyle(color: Colors.white),),
-              color: black,
-              onPressed: (){
-
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-//                        Chat(
-////                      peerId: document.documentID,
-////                      peerAvatar: document['photoUrl'],
-////                    )
-                      _MyHomePageState(
-                        peerId: "messageboardid",
-                        peerAvatar: 'photoUrl',
-                      )
-                  ));
-            },),),),
-
-
-            // Loading
+//          Align(
+//
+//            alignment: Alignment.center,
+//            child:
+//            RaisedButton(
+//                shape: RoundedRectangleBorder(
+//                    borderRadius: new BorderRadius.circular(25.0),
+//                    side: BorderSide(color: Colors.red)),
+//                elevation: 8,
+//                onPressed: (){
+//
+//                  Navigator.push(
+//                      context,
+//                      MaterialPageRoute(
+//                          builder: (context) =>
+////                        Chat(
+//////                      peerId: document.documentID,
+//////                      peerAvatar: document['photoUrl'],
+//////                    )
+//                          _MyHomePageState(
+//                            peerId: "messageboardid",
+//                            peerAvatar: 'photoUrl',
+//                          )
+//                      ));
+//                },
+//                child: Text(
+//                  'Open Chat',
+//                  style: TextStyle(
+//                    fontSize: 13.0,
+//                  ),
+//                ),
+//                color: Color(0xff000066),
+//                highlightColor: Color(0xffff7f7f),
+//                splashColor: Colors.transparent,
+//                textColor: Colors.white,
+//                padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)),),
+//
+//
+//
+//            // Loading
             Positioned(
               child: isLoading
                   ? Container(
-                child: Center(
-                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow)),
-                ),
-                color: Colors.white.withOpacity(0.8),
-              )
+                      child: Center(
+                        child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.yellow)),
+                      ),
+                      color: Colors.white.withOpacity(0.8),
+                    )
                   : Container(),
             ),
             Positioned(
-              right: 45.0,
-              bottom: 12.0,
-              child: Text("Developed by Synarc Systems", style: TextStyle(color: Colors.black),)
-            ),
+                right: 45.0,
+                bottom: 12.0,
+                child: Text(
+                  "Developed by Synarc Systems",
+                  style: TextStyle(color: Colors.white, fontSize: 10.0),
+                )),
             Positioned(
                 right: 10.0,
-                bottom: 10.0,
+                bottom: 12.0,
                 child: Hero(
-                    tag: "DemoTag",
-                    child: Image.asset(
-                      'assets/icons/SYNARC.jpg',
-                      width: 25.0,
-                      height: 25.0,
-                      fit: BoxFit.cover,
-                    )
-                ),
-            ),
-
+                  tag: "DemoTag",
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50.0),
+                      child: Image.asset(
+                        'assets/icons/SYNARC.jpg',
+                        width: 18.0,
+                        height: 18.0,
+                        fit: BoxFit.cover,
+                      )),
+                )),
           ],
         ),
         onWillPop: onBackPress,
@@ -357,25 +455,26 @@ class MainScreenState extends State<MainScreen> {
               Material(
                 child: document['photoUrl'] != null
                     ? CachedNetworkImage(
-                  placeholder: (context, url) => Container(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 1.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
-                    ),
-                    width: 50.0,
-                    height: 50.0,
-                    padding: EdgeInsets.all(15.0),
-                  ),
-                  imageUrl: document['photoUrl'],
-                  width: 50.0,
-                  height: 50.0,
-                  fit: BoxFit.cover,
-                )
+                        placeholder: (context, url) => Container(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 1.0,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.yellow),
+                          ),
+                          width: 50.0,
+                          height: 50.0,
+                          padding: EdgeInsets.all(15.0),
+                        ),
+                        imageUrl: document['photoUrl'],
+                        width: 50.0,
+                        height: 50.0,
+                        fit: BoxFit.cover,
+                      )
                     : Icon(
-                  Icons.account_circle,
-                  size: 50.0,
-                  color: Colors.grey,
-                ),
+                        Icons.account_circle,
+                        size: 50.0,
+                        color: Colors.grey,
+                      ),
                 borderRadius: BorderRadius.all(Radius.circular(25.0)),
                 clipBehavior: Clip.hardEdge,
               ),
@@ -415,15 +514,15 @@ class MainScreenState extends State<MainScreen> {
 ////                      peerId: document.documentID,
 ////                      peerAvatar: document['photoUrl'],
 ////                    )
-                _MyHomePageState(
-                      peerId: "messageboardid",
-                      peerAvatar: document['photoUrl'],
-                )
-                ));
+                        _MyHomePageState(
+                          peerId: "messageboardid",
+                          peerAvatar: document['photoUrl'],
+                        )));
           },
           color: Colors.grey,
           padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         ),
         margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
       );
@@ -464,10 +563,8 @@ class Choice {
 //  }
 //}
 
-
 //
 class _MyHomePageState extends StatelessWidget {
-
   final String peerId;
   final String peerAvatar;
 
@@ -478,30 +575,42 @@ class _MyHomePageState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     Color black = Colors.black;
 
     return MaterialApp(
-
         color: Colors.red,
         home: DefaultTabController(
-            length: 2,
+            length: 3,
             child: Scaffold(
-              backgroundColor: black ,
+              backgroundColor: black,
               appBar: AppBar(
                 elevation: 10,
                 backgroundColor: black,
-
                 title: Text("Ultimax Alert",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.yellowAccent)),
                 centerTitle: true,
+                bottom: TabBar(
+                  indicatorColor: Colors.yellowAccent,
+                  labelColor: Colors.yellowAccent,
+                  tabs: [
+                    Tab(icon: Icon(Icons.chat)),
+                    Tab(icon: Icon(Icons.notifications_active)),
+                    Tab(icon: Icon(Icons.call)),
+                  ],
+                ),
               ),
-              body: Chat(
-                      peerId: peerId,
-                      peerAvatar: peerAvatar,
-                    )
+              body: TabBarView(
+                children: [
+                  Chat(
+                    peerId: peerId,
+                    peerAvatar: peerAvatar,
+                  ),
+                  Icon(Icons.directions_transit, color: Colors.yellowAccent),
+                  Numbers_Call(),
+                ],
+              ),
             )));
   }
 }
