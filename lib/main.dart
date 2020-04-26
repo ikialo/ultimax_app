@@ -14,6 +14,7 @@ import 'package:ultimax2/TabParent.dart';
 import 'package:ultimax2/Tabs/CallNumbers.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/Private_Message.dart';
+import 'package:ultimax2/Tabs/Ultimax_Notificaiton.dart';
 
 import 'Settings.dart';
 import 'Tabs/UserSignIN.dart';
@@ -39,6 +40,8 @@ class MainScreenState extends State<MainScreen> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   SharedPreferences prefs;
+  bool admin;
+
 
   Color black = Colors.black;
 
@@ -52,8 +55,11 @@ class MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
+    admin = false;
     registerNotification();
     configLocalNotification();
+
+    setPrefs();
 
 
   }
@@ -63,7 +69,14 @@ class MainScreenState extends State<MainScreen> {
 
     prefs = await SharedPreferences.getInstance();
 
+
     firebaseMessaging.subscribeToTopic("alert").then((res) {
+      print("is subscribed");
+    }).catchError((onError) {
+      print("error");
+    });
+
+    firebaseMessaging.subscribeToTopic("notice").then((res) {
       print("is subscribed");
     }).catchError((onError) {
       print("error");
@@ -93,7 +106,18 @@ class MainScreenState extends State<MainScreen> {
       Fluttertoast.showToast(msg: err.message.toString());
     });
   }
+  void setPrefs() async {
+    prefs = await SharedPreferences.getInstance();
 
+    setState(() {
+      admin = prefs.getBool("admin");
+    });
+  }
+  void adminSetFalse() async {
+    prefs = await SharedPreferences.getInstance();
+
+    prefs.setBool("admin", false);
+  }
   void configLocalNotification() {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('app_icon');
@@ -244,6 +268,7 @@ class MainScreenState extends State<MainScreen> {
       isLoading = true;
     });
 
+    adminSetFalse();
     await FirebaseAuth.instance.signOut();
     await googleSignIn.disconnect();
     await googleSignIn.signOut();
@@ -261,6 +286,13 @@ class MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black12,
+        floatingActionButton: admin == true
+            ? FloatingActionButton(
+          onPressed: () {
+          },
+          backgroundColor: Colors.yellow,
+        )
+            : Container(),
       appBar: AppBar(
         title: Text(
           'ULTIMAX ALERT',
@@ -332,78 +364,14 @@ class MainScreenState extends State<MainScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-//                        Chat(
-////                      peerId: document.documentID,
-////                      peerAvatar: document['photoUrl'],
-////                    )
+
                             _MyHomePageState(
                               peerId: "messageboardid",
                               peerAvatar: 'photoUrl',
                             )));
               },
             ),
-            // List
-//            Container(
-//              child: StreamBuilder(
-//                stream: Firestore.instance.collection('users').snapshots(),
-//                builder: (context, snapshot) {
-//                  if (!snapshot.hasData) {
-//                    return Center(
-//                      child: CircularProgressIndicator(
-//                        valueColor: AlwaysStoppedAnimation<Color>(Colors.yellow),
-//                      ),
-//                    );
-//                  } else {
-//                    return ListView.builder(
-//                      padding: EdgeInsets.all(10.0),
-//                      itemBuilder: (context, index) => buildItem(context, snapshot.data.documents[index]),
-//                      itemCount: snapshot.data.documents.length,
-//                    );
-//                  }
-//                },
-//              ),
-//            ),
 
-//          Align(
-//
-//            alignment: Alignment.center,
-//            child:
-//            RaisedButton(
-//                shape: RoundedRectangleBorder(
-//                    borderRadius: new BorderRadius.circular(25.0),
-//                    side: BorderSide(color: Colors.red)),
-//                elevation: 8,
-//                onPressed: (){
-//
-//                  Navigator.push(
-//                      context,
-//                      MaterialPageRoute(
-//                          builder: (context) =>
-////                        Chat(
-//////                      peerId: document.documentID,
-//////                      peerAvatar: document['photoUrl'],
-//////                    )
-//                          _MyHomePageState(
-//                            peerId: "messageboardid",
-//                            peerAvatar: 'photoUrl',
-//                          )
-//                      ));
-//                },
-//                child: Text(
-//                  'Open Chat',
-//                  style: TextStyle(
-//                    fontSize: 13.0,
-//                  ),
-//                ),
-//                color: Color(0xff000066),
-//                highlightColor: Color(0xffff7f7f),
-//                splashColor: Colors.transparent,
-//                textColor: Colors.white,
-//                padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)),),
-//
-//
-//
-//            // Loading
             Positioned(
               child: isLoading
                   ? Container(
@@ -607,8 +575,8 @@ class _MyHomePageState extends StatelessWidget {
                     peerId: peerId,
                     peerAvatar: peerAvatar,
                   ),
-                  Icon(Icons.directions_transit, color: Colors.yellowAccent),
-                  Numbers_Call(),
+                  Notification_alert(),
+                 Numbers_Call(),
                 ],
               ),
             )));

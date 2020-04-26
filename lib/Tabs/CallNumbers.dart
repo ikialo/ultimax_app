@@ -1,5 +1,5 @@
-import 'package:call_number/call_number.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 // ignore: camel_case_types
 class Numbers_Call extends StatefulWidget {
@@ -9,29 +9,34 @@ class Numbers_Call extends StatefulWidget {
 
 // ignore: camel_case_types
 class _Numbers_CallState extends State<Numbers_Call> {
-  _initCall(call) async {
-    await new CallNumber().callNumber("70875993");
+  Color buttonColor = Colors.amber;
+  Color textColorbtn = Colors.white;
 
-    if (call == 1) {
-      await new CallNumber().callNumber("1800100");
+  _initCall(optCall) async {
+    if (optCall == 1) {
+      call("1800100");
     }
-    if (call == 2) {
-      await new CallNumber().callNumber("110");
+    if (optCall == 2) {
+      call("110");
     }
-    if (call == 3) {
-      await new CallNumber().callNumber("000");
+    if (optCall == 3) {
+      call("000");
     }
-    if (call == 4) {
-      await new CallNumber().callNumber("1800200");
+    if (optCall == 4) {
+      call("1800200");
     }
-    if (call == 5) {
-      await new CallNumber().callNumber("3202364");
+    if (optCall == 5) {
+      call("3202364");
     }
   }
 
+  void call(String number) => launch("tel:$number");
+  double txtsize = 20;
+
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
+    return Scaffold(
+        body: CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
           title: Text(
@@ -49,187 +54,291 @@ class _Numbers_CallState extends State<Numbers_Call> {
           itemExtent: 72.0,
           delegate: SliverChildListDelegate(
             [
-              FlatButton(
-                child: Container(
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(2),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50.0),
-                            child: Image.asset(
-                              'assets/icons/google_icon.png',
-                              width: 30.0,
-                              height: 30.0,
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                      Text("POLICE",
-                          style: TextStyle(color: Colors.blueGrey, fontSize: 30)),
-                    ],
+              Card(
+                child: Padding(
+                  child: ListTile(
+                    title: Text("POLICE",
+                        style:
+                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                    onTap: () {
+                      _initCall(1);
+                    },
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          width: 30.0,
+                          height: 30.0,
+                          fit: BoxFit.cover,
+                        )),
                   ),
+                  padding: EdgeInsets.all(8),
                 ),
-                onPressed: () {
-                  _initCall(1);
-                },
+                color: buttonColor,
               ),
-              FlatButton(
-                child: Container(
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50.0),
-                            child: Image.asset(
-                              'assets/icons/google_icon.png',
-                              width: 30.0,
-                              height: 30.0,
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                      Text("FIRE SERVICE",
-                          style: TextStyle(color: Colors.blueGrey, fontSize: 30)),
-                    ],
-                  ),
-                ),
-                onPressed: () {
-                  _initCall(2);
-                },
-              ),
-              FlatButton(
-                child: Container(
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50.0),
-                            child: Image.asset(
-                              'assets/icons/google_icon.png',
-                              width: 30.0,
-                              height: 30.0,
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                      Text("AMBULANCE",
-                          style: TextStyle(color: Colors.blueGrey, fontSize: 30)),
-                    ],
-                  ),
-                ),
-                onPressed: () {
-                  _initCall(3);
-                },
-              ),
-              FlatButton(
-                splashColor: Colors.yellow,
-                child: Container(
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50.0),
-                            child: Image.asset(
-                              'assets/icons/photo.jpg',
-                              width: 40.0,
-                              height: 40.0,
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                      Text("ULTIMAX",
-                          style: TextStyle(color: Colors.blueGrey, fontSize: 30)),
-                    ],
-                  ),
-                ),
-                onPressed: () {
-                  _initCall(3);
-                },
-              ), FlatButton(
-              splashColor: Colors.yellow,
-              child: Container(
-                height: 70,
-                decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.circular(8.0)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(5),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50.0),
-                          child: Image.asset(
-                            'assets/icons/photo.jpg',
-                            width: 40.0,
-                            height: 40.0,
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                    Text("COVID 19 HOTLINE",
-                        style: TextStyle(color: Colors.blueGrey, fontSize: 20)),
-                  ],
-                ),
-              ),
-              onPressed: () {
-                _initCall(4);
-              },
-            ),
 
-              FlatButton(
-                splashColor: Colors.yellow,
-                child: Container(
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(8.0)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.all(5),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50.0),
-                            child: Image.asset(
-                              'assets/icons/photo.jpg',
-                              width: 40.0,
-                              height: 40.0,
-                              fit: BoxFit.cover,
-                            )),
-                      ),
-                      Text("POLICE ABUSE HOTLINE",
-                          style: TextStyle(color: Colors.blueGrey, fontSize: 20)),
-                    ],
+              Card(
+                child: Padding(
+                  child: ListTile(
+                    title: Text("Fire Service",
+                        style:
+                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                    onTap: () {
+                      _initCall(2);
+                    },
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          width: 30.0,
+                          height: 30.0,
+                          fit: BoxFit.cover,
+                        )),
                   ),
+                  padding: EdgeInsets.all(8),
                 ),
-                onPressed: () {
-                  _initCall(5);
-                },
+                color: buttonColor,
               ),
+              Card(
+                child: Padding(
+                  child: ListTile(
+                    title: Text("Ambulance",
+                        style:
+                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                    onTap: () {
+                      _initCall(3);
+                    },
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          width: 30.0,
+                          height: 30.0,
+                          fit: BoxFit.cover,
+                        )),
+                  ),
+                  padding: EdgeInsets.all(8),
+                ),
+                color: buttonColor,
+              ),
+              Card(
+                child: Padding(
+                  child: ListTile(
+                    title: Text("COVID-19 HOTLINE",
+                        style:
+                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                    onTap: () {
+                      _initCall(4);
+                    },
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          width: 30.0,
+                          height: 30.0,
+                          fit: BoxFit.cover,
+                        )),
+                  ),
+                  padding: EdgeInsets.all(8),
+                ),
+                color: buttonColor,
+              ),
+              Card(
+                child: Padding(
+                  child: ListTile(
+                    title: Text("POLICE ABUSE HOTLINE",
+                        style:
+                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                    onTap: () {
+                      _initCall(5);
+                    },
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          width: 30.0,
+                          height: 30.0,
+                          fit: BoxFit.cover,
+                        )),
+                  ),
+                  padding: EdgeInsets.all(8),
+                ),
+                color: buttonColor,
+              ),
+              Card(
+                child: Padding(
+                  child: ListTile(
+                    title: Text("ULTIMAX",
+                        style:
+                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                    onTap: () {
+                      _initCall(1);
+                    },
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          width: 30.0,
+                          height: 30.0,
+                          fit: BoxFit.cover,
+                        )),
+                  ),
+                  padding: EdgeInsets.all(8),
+                ),
+                color: buttonColor,
+              ),
+//              FlatButton(
+//                child: Container(
+//                  height: 70,
+//                  decoration: BoxDecoration(
+//                      color: buttonColor,
+//                      borderRadius: BorderRadius.circular(8.0)),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                    children: <Widget>[
+//                      Padding(
+//                        padding: EdgeInsets.all(5),
+//                        child: ClipRRect(
+//                            borderRadius: BorderRadius.circular(50.0),
+//                            child: Image.asset(
+//                              'assets/icons/google_icon.png',
+//                              width: 30.0,
+//                              height: 30.0,
+//                              fit: BoxFit.cover,
+//                            )),
+//                      ),
+//                      Text("FIRE SERVICE",
+//                          style: TextStyle(color: textColorbtn, fontSize: 30)),
+//                    ],
+//                  ),
+//                ),
+//                onPressed: () {
+//                  _initCall(2);
+//                },
+//              ),
+//              FlatButton(
+//                child: Container(
+//                  height: 70,
+//                  decoration: BoxDecoration(
+//                      color: buttonColor,
+//                      borderRadius: BorderRadius.circular(8.0)),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                    children: <Widget>[
+//                      Padding(
+//                        padding: EdgeInsets.all(5),
+//                        child: ClipRRect(
+//                            borderRadius: BorderRadius.circular(50.0),
+//                            child: Image.asset(
+//                              'assets/icons/google_icon.png',
+//                              width: 30.0,
+//                              height: 30.0,
+//                              fit: BoxFit.cover,
+//                            )),
+//                      ),
+//                      Text("AMBULANCE",
+//                          style: TextStyle(color: textColorbtn, fontSize: 30)),
+//                    ],
+//                  ),
+//                ),
+//                onPressed: () {
+//                  _initCall(3);
+//                },
+//              ),
+//              FlatButton(
+//                splashColor: buttonColor,
+//                child: Container(
+//                  height: 70,
+//                  decoration: BoxDecoration(
+//                      color: buttonColor,
+//                      borderRadius: BorderRadius.circular(8.0)),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                    children: <Widget>[
+//                      Padding(
+//                        padding: EdgeInsets.all(5),
+//                        child: ClipRRect(
+//                            borderRadius: BorderRadius.circular(50.0),
+//                            child: Image.asset(
+//                              'assets/icons/photo.jpg',
+//                              width: 40.0,
+//                              height: 40.0,
+//                              fit: BoxFit.cover,
+//                            )),
+//                      ),
+//                      Text("ULTIMAX",
+//                          style: TextStyle(color: textColorbtn, fontSize: 30)),
+//                    ],
+//                  ),
+//                ),
+//                onPressed: () {
+//                  _initCall(3);
+//                },
+//              ),
+//              FlatButton(
+//                splashColor: Colors.yellow,
+//                child: Container(
+//                  height: 70,
+//                  decoration: BoxDecoration(
+//                      color: buttonColor,
+//                      borderRadius: BorderRadius.circular(8.0)),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                    children: <Widget>[
+//                      Padding(
+//                        padding: EdgeInsets.all(5),
+//                        child: ClipRRect(
+//                            borderRadius: BorderRadius.circular(50.0),
+//                            child: Image.asset(
+//                              'assets/icons/photo.jpg',
+//                              width: 40.0,
+//                              height: 40.0,
+//                              fit: BoxFit.cover,
+//                            )),
+//                      ),
+//                      Text("COVID 19 HOTLINE",
+//                          style: TextStyle(color: textColorbtn, fontSize: 20)),
+//                    ],
+//                  ),
+//                ),
+//                onPressed: () {
+//                  _initCall(4);
+//                },
+//              ),
+//              FlatButton(
+//                splashColor: Colors.yellow,
+//                child: Container(
+//                  height: 70,
+//                  decoration: BoxDecoration(
+//                      color: buttonColor,
+//                      borderRadius: BorderRadius.circular(8.0)),
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                    children: <Widget>[
+//                      Padding(
+//                        padding: EdgeInsets.all(5),
+//                        child: ClipRRect(
+//                            borderRadius: BorderRadius.circular(50.0),
+//                            child: Image.asset(
+//                              'assets/icons/photo.jpg',
+//                              width: 40.0,
+//                              height: 40.0,
+//                              fit: BoxFit.cover,
+//                            )),
+//                      ),
+//                      Text("POLICE ABUSE HOTLINE",
+//                          style: TextStyle(color: textColorbtn, fontSize: 20)),
+//                    ],
+//                  ),
+//                ),
+//                onPressed: () {
+//                  _initCall(5);
+//                },
+//              ),
             ],
           ),
         ),
       ],
-    );
+    ));
   }
 }

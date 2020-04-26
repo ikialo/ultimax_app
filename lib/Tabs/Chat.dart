@@ -700,20 +700,20 @@ class ChatScreenState extends State<ChatScreen> {
           color: Colors.white),
     );
   }
-
   Widget buildListMessage() {
     return Flexible(
-      child: groupChatId == ''
-          ? Center(
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
-          : StreamBuilder(
-              stream: Firestore.instance
-                  .collection('messages')
-                  .document("messbo")
-                  .collection("messbo")
-                  .orderBy('timestamp', descending: true)
-                  .limit(500)
+        child: groupChatId == ''
+            ? Center(
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
+            : StreamBuilder(
+            stream: Firestore.instance
+                .collection('messages')
+                .document("messbo")
+                .collection("messbo")
+                .orderBy('timestamp', descending: true)
+
+                          .limit(500)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {

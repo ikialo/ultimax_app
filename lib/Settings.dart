@@ -15,13 +15,28 @@ class _RegisterFormState extends State<Settings> {
   bool _agreedToTOS = true;
 
   final TextEditingController textEditingController =
-  new TextEditingController();
+      new TextEditingController();
 
   SharedPreferences prefs;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
+  bool admin = false;
 
+  void setPrefs() async {
+    prefs = await SharedPreferences.getInstance();
 
+    setState(() {
+      admin = prefs.getBool("admin");
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    setPrefs();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +44,12 @@ class _RegisterFormState extends State<Settings> {
         appBar: AppBar(
           title: Text("Settings"),
         ),
+        floatingActionButton: admin == true
+            ? FloatingActionButton(
+                onPressed: () {},
+                backgroundColor: Colors.yellow,
+              )
+            : Container(),
         body: Center(
           child: Column(
             children: <Widget>[
@@ -55,8 +76,8 @@ class _RegisterFormState extends State<Settings> {
                   )),
               FlatButton(
                 onPressed: () {
-
-                  onUpdateProfile(textEditingController.text, prefs.getString("id"));
+                  onUpdateProfile(
+                      textEditingController.text, prefs.getString("id"));
                 },
                 color: Colors.black,
                 child: Text(
@@ -80,7 +101,6 @@ class _RegisterFormState extends State<Settings> {
 
       Firestore.instance.collection('users').document(uid).updateData({
         'nickname': content,
-
       });
 
       prefs.setString('nickname', content);

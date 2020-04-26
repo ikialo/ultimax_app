@@ -126,6 +126,7 @@ class LoginScreenState extends State<LoginScreen> {
       });
 
       firebaseUser.getIdToken(refresh: true).then((idToken) =>
+
           {prefs.setBool("admin", idToken.claims.containsKey("admin"))});
       Navigator.push(
           context,
