@@ -3,10 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ultimax2/SignIn/signInForm.dart';
 
 import '../CustomCurve.dart';
 import '../main.dart';
+import '../providerClass.dart';
 
 class MyApp extends StatelessWidget {
   Color black = Colors.black;
@@ -14,13 +17,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Chat Demo',
-      theme: ThemeData(
-        primaryColor: black,
-      ),
-      home: LoginScreen(title: 'CHAT DEMO'),
-      debugShowCheckedModeBanner: false,
-    );
+        title: 'Chat Demo',
+        theme: ThemeData(
+          primaryColor: black,
+        ),
+        home: ChangeNotifierProvider<EmailPass>(
+          builder: (_) => EmailPass( false),
+          child: LoginScreen(title: 'CHAT DEMO'),
+        ));
   }
 }
 
@@ -33,30 +37,45 @@ class LoginScreen extends StatefulWidget {
   LoginScreenState createState() => LoginScreenState();
 }
 
+  @override
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    return null;
+  }
+
+
 class LoginScreenState extends State<LoginScreen> {
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+
+
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   SharedPreferences prefs;
+
+  bool _log = false;
 
   bool isLoading = false;
   bool isLoggedIn = false;
   FirebaseUser currentUser;
+  String testuser;
+  EmailPass _emailPass;
 
   @override
   void initState() {
     super.initState();
     isSignedIn();
+    testuser = "try";
   }
 
   void isSignedIn() async {
+
     this.setState(() {
       isLoading = true;
     });
 
     prefs = await SharedPreferences.getInstance();
+    print(await FirebaseAuth.instance.currentUser());
 
-    isLoggedIn = await googleSignIn.isSignedIn();
-    if (isLoggedIn) {
+
+    if (await FirebaseAuth.instance.currentUser() !=null) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -70,6 +89,18 @@ class LoginScreenState extends State<LoginScreen> {
     });
   }
 
+//  Future<Null> handleReg() async {
+//    print(await Auth().signUp("Kax", "isaacsilas05@gmail.com", "password"));
+//  }
+//
+//  Future<Null> handleSign() async {
+//    String username = await Auth().signIn("isaacsilas05@gmail.com", "password");
+//    setState(() {
+//      testuser = username;
+//    });
+//    print(username);
+//  }
+
   Future<Null> handleSignIn() async {
     prefs = await SharedPreferences.getInstance();
 
@@ -77,16 +108,18 @@ class LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
 
-    GoogleSignInAccount googleUser = await googleSignIn.signIn();
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+//    GoogleSignInAccount googleUser = await googleSignIn.signIn();
+//    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+//
+//    final AuthCredential credential = GoogleAuthProvider.getCredential(
+//      accessToken: googleAuth.accessToken,
+//      idToken: googleAuth.idToken,
+//    );
+//
+//    FirebaseUser firebaseUser =
+//        (await firebaseAuth.signInWithCredential(credential)).user;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    FirebaseUser firebaseUser =
-        (await firebaseAuth.signInWithCredential(credential)).user;
+    FirebaseUser firebaseUser = _emailPass.getUser();
 
     if (firebaseUser != null) {
       // Check is already sign up
@@ -126,7 +159,6 @@ class LoginScreenState extends State<LoginScreen> {
       });
 
       firebaseUser.getIdToken(refresh: true).then((idToken) =>
-
           {prefs.setBool("admin", idToken.claims.containsKey("admin"))});
       Navigator.push(
           context,
@@ -143,21 +175,22 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    final empass = Provider.of<EmailPass>(context);
+
+
+
+
     return Scaffold(
+
+//      floatingActionButton: FloatingActionButton(onPressed: handleReg,),
         backgroundColor: Colors.black12,
         body: Stack(
           children: <Widget>[
-//            Align(alignment: Alignment.topCenter,
-//             child : CustomPaint( child: Container(        height: 200.0,
-////               decoration: BoxDecoration(
-////                   gradient: LinearGradient(
-////
-////                       colors: [Colors.blue, Colors.red])),
-////
-//            ),
-//               painter: CurvePainter(),
-//            ),),
-
+            Align(
+              alignment: Alignment.center,
+              child: SignInForm(),
+            ),
             Align(
                 alignment: Alignment.topCenter,
                 child: Image.asset(
@@ -167,13 +200,12 @@ class LoginScreenState extends State<LoginScreen> {
                   fit: BoxFit.fitWidth,
                 )),
 
-
-
             Positioned(
               top: 70,
               left: 50,
               child: Text(
-                "SIGN IN",
+                empass.getAuth().toString()
+                ,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 22,
@@ -181,85 +213,26 @@ class LoginScreenState extends State<LoginScreen> {
               ),
             ),
 
-
             Positioned(
                 right: 45.0,
                 bottom: 12.0,
-                child: Text("Developed by Synarc Systems", style: TextStyle(color: Colors.white, fontSize: 10.0),)
-            ),
+                child: Text(
+                  "Developed by Synarc Systems",
+                  style: TextStyle(color: Colors.blueGrey, fontSize: 10.0),
+                )),
             Positioned(
                 right: 10.0,
                 bottom: 12.0,
                 child: Hero(
                   tag: "DemoTag",
-                  child:ClipRRect(
+                  child: ClipRRect(
                       borderRadius: BorderRadius.circular(50.0),
-
                       child: Image.asset(
                         'assets/icons/SYNARC.jpg',
                         width: 18.0,
                         height: 18.0,
                         fit: BoxFit.cover,
-                      )),)
-            ),
-
-
-
-            Opacity(
-              opacity: 1,
-              child: Padding(
-                padding: EdgeInsets.only(top: 120.0),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Hero(
-                    tag: "ultimax+logo",
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/photo.jpg',
-                          width: 100,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                ),
-              ),
-            ),
-
-            Align(
-                alignment: Alignment.center,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(5),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50.0),
-                          child: Image.asset(
-                            'assets/icons/google_icon.png',
-                            width: 25,
-                            height: 25.0,
-                            fit: BoxFit.cover,
-                          )),
-                    ),
-                    RaisedButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(25.0),
-                            side: BorderSide(color: Colors.red)),
-                        elevation: 8,
-                        onPressed: handleSignIn,
-                        child: Text(
-                          'SIGN IN WITH GOOGLE',
-                          style: TextStyle(
-                            fontSize: 13.0,
-                          ),
-                        ),
-                        color: Color(0xff000066),
-                        highlightColor: Color(0xffff7f7f),
-                        splashColor: Colors.transparent,
-                        textColor: Colors.white,
-                        padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)),
-                  ],
+                      )),
                 )),
 
             // Loading

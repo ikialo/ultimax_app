@@ -117,6 +117,7 @@ class MainScreenState extends State<MainScreen> {
     prefs = await SharedPreferences.getInstance();
 
     prefs.setBool("admin", false);
+    prefs.setBool("signIn", false);
   }
   void configLocalNotification() {
     var initializationSettingsAndroid =
@@ -270,8 +271,7 @@ class MainScreenState extends State<MainScreen> {
 
     adminSetFalse();
     await FirebaseAuth.instance.signOut();
-    await googleSignIn.disconnect();
-    await googleSignIn.signOut();
+
 
     this.setState(() {
       isLoading = false;
