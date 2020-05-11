@@ -154,7 +154,7 @@ class ChatScreenState extends State<ChatScreen> {
       invalidFileNameSymbols: ['/'],
     );
 
-    final imageFile = await FlutterDocumentPicker.openDocument(params: params);
+     imageFile = File(await FlutterDocumentPicker.openDocument(params: params));
 
     if (imageFile != null) {
       setState(() {
@@ -595,6 +595,8 @@ class ChatScreenState extends State<ChatScreen> {
           Row(
             children: <Widget>[
               new IconButton(
+
+                key:Key("openCamera"),
                 icon: new Icon(Icons.camera_alt),
                 onPressed: () {
                   cameraOption();
@@ -602,6 +604,7 @@ class ChatScreenState extends State<ChatScreen> {
                 color: black,
               ),
               new IconButton(
+                key: Key("openImage"),
                 icon: new Icon(Icons.image),
                 onPressed: getImage,
                 color: black,
@@ -649,9 +652,11 @@ class ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           // Button send image
           Material(
+
             child: new Container(
               margin: new EdgeInsets.symmetric(horizontal: 1.0),
               child: new IconButton(
+                  key: Key("attachment"),
                 icon: new Icon(Icons.attach_file),
                 onPressed: getSticker,
                 color: black,

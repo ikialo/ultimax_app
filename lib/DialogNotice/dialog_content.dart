@@ -6,16 +6,14 @@ import "package:flutter/material.dart";
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class Dialog_content extends StatefulWidget {
   @override
   _Dialog_contentState createState() => _Dialog_contentState();
 }
 
 class _Dialog_contentState extends State<Dialog_content> {
-
   final TextEditingController textEditingController =
-  new TextEditingController();
+      new TextEditingController();
   File imageFile;
   bool isLoading;
   final FocusNode focusNode = new FocusNode();
@@ -27,8 +25,6 @@ class _Dialog_contentState extends State<Dialog_content> {
   var imageUrl;
   bool attachmentAvail;
 
-
-
   @override
   void initState() {
     // TODO: implement initState
@@ -38,10 +34,8 @@ class _Dialog_contentState extends State<Dialog_content> {
     attachmentAvail = false;
     focusNode.addListener(onFocusChange);
 
-
     isShowSticker = false;
     admin = false;
-
   }
 
   @override
@@ -58,8 +52,6 @@ class _Dialog_contentState extends State<Dialog_content> {
     }
   }
 
-
-
   Future getImage() async {
     imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
 
@@ -68,20 +60,57 @@ class _Dialog_contentState extends State<Dialog_content> {
         isLoading = true;
         attachmentAvail = true;
       });
-     // uploadFile();
+      // uploadFile();
     }
   }
 
-  Widget inputImg(){
-    return Column (
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[Container(child: imageFile!= null?Image.file(imageFile): Container(), height: 150, width: 150,), SingleChildScrollView(child:buildInput())],);
+  Widget inputImg() {
+    return SizedBox(
+      child: Stack(
+        children: <Widget>[
 
+          imageFile != null
+              ? Padding(
+                  padding: EdgeInsets.all(1.0),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                      child: imageFile != null
+                          ? Image.file(imageFile)
+                          : Container(),
+                      height: 280,
+                      width: 280,
+                    ),
+                  ))
+              : Container(),
+          Align(
+            child: SingleChildScrollView(child: buildInput()),
+            alignment: Alignment.bottomCenter,
+          ),
+          imageFile != null
+              ? Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    color: Colors.white,
+                    onPressed: () {
+
+                      setState(() {
+                        imageFile = null;
+                      });
+
+                    },
+                    icon: Icon(Icons.cancel),
+                  ),
+                )
+              : Container(),
+        ],
+      ),
+      height: 400,
+    );
   }
 
   Widget buildInput() {
     return Container(
-
       child: Row(
         children: <Widget>[
           // Button send image
@@ -101,7 +130,6 @@ class _Dialog_contentState extends State<Dialog_content> {
           Flexible(
             child: Container(
               height: 70,
-              
               child: TextField(
                 keyboardType: TextInputType.multiline,
                 minLines: 1,
@@ -123,9 +151,9 @@ class _Dialog_contentState extends State<Dialog_content> {
               margin: new EdgeInsets.symmetric(horizontal: 8.0),
               child: new IconButton(
                 icon: new Icon(Icons.send),
-                onPressed: () { onSendMessage(textEditingController.text);
-                Navigator.pop(context);
-
+                onPressed: () {
+                  onSendMessage(textEditingController.text);
+                  Navigator.pop(context);
                 },
                 color: Colors.black,
               ),
@@ -136,9 +164,8 @@ class _Dialog_contentState extends State<Dialog_content> {
       ),
       width: double.infinity,
       decoration: new BoxDecoration(
-
           border:
-          new Border(top: new BorderSide(color: Colors.grey, width: 0.5)),
+              new Border(top: new BorderSide(color: Colors.grey, width: 0.5)),
           color: Colors.white),
     );
   }
@@ -148,8 +175,7 @@ class _Dialog_contentState extends State<Dialog_content> {
 
     if (attachmentAvail) {
       uploadFile(content);
-    }
-    else {
+    } else {
       if (content.trim() != '') {
         textEditingController.clear();
 
@@ -157,10 +183,7 @@ class _Dialog_contentState extends State<Dialog_content> {
             .collection('Notice')
             .document("Notice_")
             .collection("Ultimax")
-            .document(DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString());
+            .document(DateTime.now().millisecondsSinceEpoch.toString());
 
         Firestore.instance.runTransaction((transaction) async {
           await transaction.set(
@@ -168,10 +191,7 @@ class _Dialog_contentState extends State<Dialog_content> {
             {
               'idFrom': "ultimaxAlertAdmin",
               'idTo': "groupNotice",
-              'timestamp': DateTime
-                  .now()
-                  .millisecondsSinceEpoch
-                  .toString(),
+              'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
               'content': content,
               'attachment': imageURL != null ? imageURL : "no_image",
             },
@@ -186,6 +206,7 @@ class _Dialog_contentState extends State<Dialog_content> {
       }
     }
   }
+
   Future uploadFile(content) async {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
@@ -212,13 +233,12 @@ class _Dialog_contentState extends State<Dialog_content> {
               'idTo': "groupNotice",
               'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
               'content': content,
-              'attachment': downloadUrl ,
+              'attachment': downloadUrl,
             },
           );
         });
         listScrollController.animateTo(0.0,
             duration: Duration(milliseconds: 300), curve: Curves.easeOut);
-
       } else {
         Fluttertoast.showToast(msg: 'Nothing to send');
       }
@@ -234,5 +254,4 @@ class _Dialog_contentState extends State<Dialog_content> {
       Fluttertoast.showToast(msg: 'This file is not an image');
     });
   }
-
 }

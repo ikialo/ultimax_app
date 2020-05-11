@@ -16,8 +16,10 @@ import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/Private_Message.dart';
 import 'package:ultimax2/Tabs/Ultimax_Notificaiton.dart';
 
-import 'Settings.dart';
-import 'Tabs/UserSignIN.dart';
+import 'AppBar/mainDrawer.dart';
+import 'AppBar/tab_selection.dart';
+import 'AppBar/Settings.dart';
+import 'SignIn/UserSignIN.dart';
 
 void main() => runApp(MyApp());
 
@@ -36,21 +38,22 @@ class MainScreenState extends State<MainScreen> {
   final String currentUserId;
   final FirebaseMessaging firebaseMessaging = new FirebaseMessaging();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      new FlutterLocalNotificationsPlugin();
+  new FlutterLocalNotificationsPlugin();
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
   SharedPreferences prefs;
   bool admin;
 
-
   Color black = Colors.black;
 
+  String photo = null;
 
   bool isLoading = false;
-  List<Choice> choices = const <Choice>[
-    const Choice(title: 'Settings', icon: Icons.settings),
-    const Choice(title: 'Log out', icon: Icons.exit_to_app),
-  ];
+
+//  List<Choice> choices = const <Choice>[
+//    const Choice(title: 'Settings', icon: Icons.settings),
+//    const Choice(title: 'Log out', icon: Icons.exit_to_app),
+//  ];
 
   @override
   void initState() {
@@ -59,16 +62,12 @@ class MainScreenState extends State<MainScreen> {
     registerNotification();
     configLocalNotification();
 
+    getURLPHOTO();
     setPrefs();
-
-
   }
 
-  
   Future<void> registerNotification() async {
-
     prefs = await SharedPreferences.getInstance();
-
 
     firebaseMessaging.subscribeToTopic("alert").then((res) {
       print("is subscribed");
@@ -106,6 +105,7 @@ class MainScreenState extends State<MainScreen> {
       Fluttertoast.showToast(msg: err.message.toString());
     });
   }
+
   void setPrefs() async {
     prefs = await SharedPreferences.getInstance();
 
@@ -113,33 +113,31 @@ class MainScreenState extends State<MainScreen> {
       admin = prefs.getBool("admin");
     });
   }
+
   void adminSetFalse() async {
     prefs = await SharedPreferences.getInstance();
 
     prefs.setBool("admin", false);
     prefs.setBool("signIn", false);
   }
+
   void configLocalNotification() {
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('app_icon');
+    new AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
-
-
   }
 
-  
-  
-  void onItemMenuPress(Choice choice) {
-    if (choice.title == 'Log out') {
-      handleSignOut();
-    } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Settings()));
-    }
-  }
+//  void onItemMenuPress(Choice choice) {
+//    if (choice.title == 'Log out') {
+//      handleSignOut();
+//    } else {
+//      Navigator.push(
+//          context, MaterialPageRoute(builder: (context) => Settings()));
+//    }
+//  }
 
   void CreateMessageBoard() {
     String groupChatId = "messbo";
@@ -147,7 +145,10 @@ class MainScreenState extends State<MainScreen> {
         .collection('MessageBoard')
         .document(groupChatId)
         .collection(groupChatId)
-        .document(DateTime.now().millisecondsSinceEpoch.toString());
+        .document(DateTime
+        .now()
+        .millisecondsSinceEpoch
+        .toString());
   }
 
   void showNotification(message) async {
@@ -180,7 +181,7 @@ class MainScreenState extends State<MainScreen> {
         builder: (BuildContext context) {
           return SimpleDialog(
             contentPadding:
-                EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
+            EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
             children: <Widget>[
               Container(
                 color: black,
@@ -227,7 +228,7 @@ class MainScreenState extends State<MainScreen> {
                     Text(
                       'CANCEL',
                       style:
-                          TextStyle(color: black, fontWeight: FontWeight.bold),
+                      TextStyle(color: black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -248,7 +249,7 @@ class MainScreenState extends State<MainScreen> {
                     Text(
                       'YES',
                       style:
-                          TextStyle(color: black, fontWeight: FontWeight.bold),
+                      TextStyle(color: black, fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -272,238 +273,244 @@ class MainScreenState extends State<MainScreen> {
     adminSetFalse();
     await FirebaseAuth.instance.signOut();
 
-
     this.setState(() {
       isLoading = false;
     });
 
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => MyApp()),
-        (Route<dynamic> route) => false);
+            (Route<dynamic> route) => false);
+  }
+
+  Future<void> getURLPHOTO() async {
+    await Firestore.instance.collection("users").document(currentUserId)
+        .get()
+        .then((url) {
+      setState(() {
+        photo = url["photoUrl"];
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black12,
-        floatingActionButton: admin == true
-            ? FloatingActionButton(
-          onPressed: () {
-          },
-          backgroundColor: Colors.yellow,
-        )
-            : Container(),
-      appBar: AppBar(
-        title: Text(
-          'ULTIMAX ALERT',
-          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        backgroundColor: Colors.black12,
+
+        appBar: AppBar(),
+//      appBar: AppBar(
+//        title: Text(
+//          'ULTIMAX ALERT',
+//          style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+//        ),
+//        centerTitle: true,
+//        actions: <Widget>[
+//          PopupMenuButton<Choice>(
+//            onSelected: onItemMenuPress,
+//            itemBuilder: (BuildContext context) {
+//              return choices.map((Choice choice) {
+//                return PopupMenuItem<Choice>(
+//                    value: choice,
+//                    child: Row(
+//                      children: <Widget>[
+//                        Icon(
+//                          Icons.menu,
+//                          color: black,
+//                        ),
+//                        Container(
+//                          width: 10.0,
+//                        ),
+//                        Text(
+//                          choice.title,
+//                          style: TextStyle(color: black),
+//                        ),
+//                      ],
+//                    ));
+//              }).toList();
+//            },
+//          ),
+//        ],
+//      ),
+
+        drawer: Drawer(
+            child: DrawMain(currentUserId: currentUserId,)
         ),
-        centerTitle: true,
-        actions: <Widget>[
-          PopupMenuButton<Choice>(
-            onSelected: onItemMenuPress,
-            itemBuilder: (BuildContext context) {
-              return choices.map((Choice choice) {
-                return PopupMenuItem<Choice>(
-                    value: choice,
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          choice.icon,
-                          color: black,
-                        ),
-                        Container(
-                          width: 10.0,
-                        ),
-                        Text(
-                          choice.title,
-                          style: TextStyle(color: black),
-                        ),
-                      ],
-                    ));
-              }).toList();
-            },
-          ),
-        ],
-      ),
-      body: WillPopScope(
-        child: Stack(
-          children: <Widget>[
+        body: SafeArea(
+          child: WillPopScope(
+            child: Container(
+                child: Stack(
+                  children: <Widget>[
 
-
-
-            Align(
-                alignment: Alignment.topCenter,
-                child: Image.asset(
-                  'assets/icons/topdec.png',
-                  width: 700,
-                  height: 150.0,
-                  fit: BoxFit.fitWidth,
-                )),
-
-            GestureDetector(
-              child: Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Hero(
-                    tag: "ultimax+logo",
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/photo.jpg',
-                          width: 100,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                ),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-
-                            _MyHomePageState(
-                              peerId: "messageboardid",
-                              peerAvatar: 'photoUrl',
-                            )));
-              },
-            ),
-
-            Positioned(
-              child: isLoading
-                  ? Container(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.yellow)),
-                      ),
-                      color: Colors.white.withOpacity(0.8),
-                    )
-                  : Container(),
-            ),
-            Positioned(
-                right: 45.0,
-                bottom: 12.0,
-                child: Text(
-                  "Developed by Synarc Systems",
-                  style: TextStyle(color: Colors.white, fontSize: 10.0),
-                )),
-            Positioned(
-                right: 10.0,
-                bottom: 12.0,
-                child: Hero(
-                  tag: "DemoTag",
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50.0),
-                      child: Image.asset(
-                        'assets/icons/SYNARC.jpg',
-                        width: 18.0,
-                        height: 18.0,
-                        fit: BoxFit.cover,
-                      )),
-                )),
-          ],
-        ),
-        onWillPop: onBackPress,
-      ),
-    );
-  }
-
-  Widget buildItem(BuildContext context, DocumentSnapshot document) {
-    if (document['id'] == currentUserId) {
-      return Container();
-    } else {
-      return Container(
-        child: FlatButton(
-          child: Row(
-            children: <Widget>[
-              Material(
-                child: document['photoUrl'] != null
-                    ? CachedNetworkImage(
-                        placeholder: (context, url) => Container(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 1.0,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.yellow),
+                    GestureDetector(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Hero(
+                            tag: "ultimax+logo",
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50.0),
+                                child: Image.asset(
+                                  'assets/icons/photo.png',
+                                  width: 225,
+                                  height: 225.0,
+                                  fit: BoxFit.cover,
+                                )),
                           ),
-                          width: 50.0,
-                          height: 50.0,
-                          padding: EdgeInsets.all(15.0),
                         ),
-                        imageUrl: document['photoUrl'],
-                        width: 50.0,
-                        height: 50.0,
-                        fit: BoxFit.cover,
-                      )
-                    : Icon(
-                        Icons.account_circle,
-                        size: 50.0,
-                        color: Colors.grey,
                       ),
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                clipBehavior: Clip.hardEdge,
-              ),
-              Flexible(
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          'Nickname: ${document['nickname']}',
-                          style: TextStyle(color: Colors.blue),
+                      
+                      key: Key("openTabOptions"),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    TabSelection(
+                                      peerId: "messageboardid",
+                                      peerAvatar: 'photoUrl',
+                                    )));
+                      }
+                    ),
+                    Positioned(
+                      child: isLoading
+                          ? Container(
+                        child: Center(
+                          child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.yellow)),
                         ),
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
-                      ),
-                      Container(
-                        child: Text(
-                          'About me: ${document['aboutMe'] ?? 'Not available'}',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                        color: Colors.white.withOpacity(0.8),
                       )
-                    ],
-                  ),
-                  margin: EdgeInsets.only(left: 20.0),
+                          : Container(),
+                    ),
+                    Positioned(
+                      right: 45.0,
+                      bottom: 2.0,
+                      child: Opacity(child: Text(
+                        "Developed by Synarc Systems",
+                        style: TextStyle(color: Colors.white, fontSize: 10.0),
+                      ), opacity: 0.7,),),
+                    Positioned(
+                        right: 10.0,
+                        bottom: 2.0,
+                        child: Hero(
+                            tag: "DemoTag",
+                            child: Opacity(child: ClipRRect(
+                                borderRadius: BorderRadius.circular(50.0),
+                                child: Image.asset(
+                                  'assets/icons/SYNARC.jpg',
+                                  width: 18.0,
+                                  height: 18.0,
+                                  fit: BoxFit.cover,
+                                )), opacity: 0.7,)
+                        )),
+                  ],
                 ),
-              ),
-            ],
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/icons/UTXALERT.jpg"),
+                    fit: BoxFit.cover,
+                  ),
+                )
+            ),
+            onWillPop: onBackPress,
           ),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-//                        Chat(
-////                      peerId: document.documentID,
-////                      peerAvatar: document['photoUrl'],
-////                    )
-                        _MyHomePageState(
-                          peerId: "messageboardid",
-                          peerAvatar: document['photoUrl'],
-                        )));
-          },
-          color: Colors.grey,
-          padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        ),
-        margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
-      );
-    }
+        ));
   }
-}
 
-class Choice {
-  const Choice({this.title, this.icon});
+//  Widget buildItem(BuildContext context, DocumentSnapshot document) {
+//    if (document['id'] == currentUserId) {
+//      return Container();
+//    } else {
+//      return Container(
+//        child: FlatButton(
+//          child: Row(
+//            children: <Widget>[
+//              Material(
+//                child: document['photoUrl'] != null
+//                    ? CachedNetworkImage(
+//                        placeholder: (context, url) => Container(
+//                          child: CircularProgressIndicator(
+//                            strokeWidth: 1.0,
+//                            valueColor:
+//                                AlwaysStoppedAnimation<Color>(Colors.yellow),
+//                          ),
+//                          width: 50.0,
+//                          height: 50.0,
+//                          padding: EdgeInsets.all(15.0),
+//                        ),
+//                        imageUrl: document['photoUrl'],
+//                        width: 50.0,
+//                        height: 50.0,
+//                        fit: BoxFit.cover,
+//                      )
+//                    : Icon(
+//                        Icons.account_circle,
+//                        size: 50.0,
+//                        color: Colors.grey,
+//                      ),
+//                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+//                clipBehavior: Clip.hardEdge,
+//              ),
+//              Flexible(
+//                child: Container(
+//                  child: Column(
+//                    children: <Widget>[
+//                      Container(
+//                        child: Text(
+//                          'Nickname: ${document['nickname']}',
+//                          style: TextStyle(color: Colors.blue),
+//                        ),
+//                        alignment: Alignment.centerLeft,
+//                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
+//                      ),
+//                      Container(
+//                        child: Text(
+//                          'About me: ${document['aboutMe'] ?? 'Not available'}',
+//                          style: TextStyle(color: Colors.blue),
+//                        ),
+//                        alignment: Alignment.centerLeft,
+//                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+//                      )
+//                    ],
+//                  ),
+//                  margin: EdgeInsets.only(left: 20.0),
+//                ),
+//              ),
+//            ],
+//          ),
+//          onPressed: () {
+//            Navigator.push(
+//                context,
+//                MaterialPageRoute(
+//                    builder: (context) =>
+////                        Chat(
+//////                      peerId: document.documentID,
+//////                      peerAvatar: document['photoUrl'],
+//////                    )
+//                        TabSelection(
+//                          peerId: "messageboardid",
+//                          peerAvatar: document['photoUrl'],
+//                        )));
+//          },
+//          color: Colors.grey,
+//          padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
+//          shape:
+//              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+//        ),
+//        margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
+//      );
+//    }
+//  }
+//}
 
-  final String title;
-  final IconData icon;
-}
+//class Choice {
+//  const Choice({this.title, this.icon});
+//
+//  final String title;
+//  final IconData icon;
+//}
 
 //void main() => runApp(new MediaQuery(
 //    data: new MediaQueryData(), child: new MaterialApp(home: new MyApp())));
@@ -532,53 +539,4 @@ class Choice {
 //}
 
 //
-class _MyHomePageState extends StatelessWidget {
-  final String peerId;
-  final String peerAvatar;
-
-  var primaryColor = Colors.blue;
-
-  _MyHomePageState({Key key, @required this.peerId, @required this.peerAvatar})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Color black = Colors.black;
-
-    return MaterialApp(
-        color: Colors.red,
-        home: DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              backgroundColor: black,
-              appBar: AppBar(
-                elevation: 10,
-                backgroundColor: black,
-                title: Text("Ultimax Alert",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.yellowAccent)),
-                centerTitle: true,
-                bottom: TabBar(
-                  indicatorColor: Colors.yellowAccent,
-                  labelColor: Colors.yellowAccent,
-                  tabs: [
-                    Tab(icon: Icon(Icons.chat)),
-                    Tab(icon: Icon(Icons.notifications_active)),
-                    Tab(icon: Icon(Icons.call)),
-                  ],
-                ),
-              ),
-              body: TabBarView(
-                children: [
-                  Chat(
-                    peerId: peerId,
-                    peerAvatar: peerAvatar,
-                  ),
-                  Notification_alert(),
-                 Numbers_Call(),
-                ],
-              ),
-            )));
-  }
 }

@@ -9,7 +9,7 @@ class Numbers_Call extends StatefulWidget {
 
 // ignore: camel_case_types
 class _Numbers_CallState extends State<Numbers_Call> {
-  Color buttonColor = Colors.amber;
+  Color buttonColor = Colors.black54;
   Color textColorbtn = Colors.white;
 
   _initCall(optCall) async {
@@ -41,25 +41,58 @@ class _Numbers_CallState extends State<Numbers_Call> {
         SliverAppBar(
           title: Text(
             'Emergency Contacts',
-            style: TextStyle(color: Colors.yellow),
+            style:  TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white
+                , fontFamily: "HANDGOTN"),
           ),
-          backgroundColor: Colors.yellow,
+          backgroundColor: Colors.white,
           expandedHeight: 150.0,
           flexibleSpace: FlexibleSpaceBar(
             background:
-                Image.asset('assets/icons/photo.jpg', fit: BoxFit.cover),
+                Image.asset('assets/icons/photo.png', fit: BoxFit.cover),
           ),
         ),
         SliverFixedExtentList(
           itemExtent: 72.0,
           delegate: SliverChildListDelegate(
             [
+
+              Card(
+                child: Padding(
+                  child: ListTile(
+                    title: Text("ULTIMAX",
+                        style:
+                        TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            , fontFamily: "HANDGOTN")),
+                    onTap: () {
+                      _initCall(1);
+                    },
+                    leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(50.0),
+                        child: Image.asset(
+                          'assets/icons/google_icon.png',
+                          width: 30.0,
+                          height: 30.0,
+                          fit: BoxFit.cover,
+                        )),
+                  ),
+                  padding: EdgeInsets.all(8),
+                ),
+                color: buttonColor,
+              ),
               Card(
                 child: Padding(
                   child: ListTile(
                     title: Text("POLICE",
                         style:
-                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                        TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            , fontFamily: "HANDGOTN")
+                    ),
                     onTap: () {
                       _initCall(1);
                     },
@@ -82,7 +115,10 @@ class _Numbers_CallState extends State<Numbers_Call> {
                   child: ListTile(
                     title: Text("Fire Service",
                         style:
-                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                        TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            , fontFamily: "HANDGOTN")),
                     onTap: () {
                       _initCall(2);
                     },
@@ -104,7 +140,10 @@ class _Numbers_CallState extends State<Numbers_Call> {
                   child: ListTile(
                     title: Text("Ambulance",
                         style:
-                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                        TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            , fontFamily: "HANDGOTN")),
                     onTap: () {
                       _initCall(3);
                     },
@@ -126,7 +165,10 @@ class _Numbers_CallState extends State<Numbers_Call> {
                   child: ListTile(
                     title: Text("COVID-19 HOTLINE",
                         style:
-                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                        TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            , fontFamily: "HANDGOTN")),
                     onTap: () {
                       _initCall(4);
                     },
@@ -148,7 +190,10 @@ class _Numbers_CallState extends State<Numbers_Call> {
                   child: ListTile(
                     title: Text("POLICE ABUSE HOTLINE",
                         style:
-                            TextStyle(color: textColorbtn, fontSize: txtsize)),
+                        TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                            , fontFamily: "HANDGOTN")),
                     onTap: () {
                       _initCall(5);
                     },
@@ -165,28 +210,7 @@ class _Numbers_CallState extends State<Numbers_Call> {
                 ),
                 color: buttonColor,
               ),
-              Card(
-                child: Padding(
-                  child: ListTile(
-                    title: Text("ULTIMAX",
-                        style:
-                            TextStyle(color: textColorbtn, fontSize: txtsize)),
-                    onTap: () {
-                      _initCall(1);
-                    },
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          width: 30.0,
-                          height: 30.0,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  padding: EdgeInsets.all(8),
-                ),
-                color: buttonColor,
-              ),
+
 //              FlatButton(
 //                child: Container(
 //                  height: 70,

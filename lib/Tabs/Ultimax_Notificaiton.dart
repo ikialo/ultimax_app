@@ -63,10 +63,12 @@ class _NotificationState extends State<Notification_alert> {
       ),
       floatingActionButton: admin == true
           ? FloatingActionButton(
+        child: Icon(Icons.add,color: Colors.white,),
               onPressed: () {
                 dialogbox_notice();
               },
-              backgroundColor: Colors.yellow,
+              backgroundColor: Colors.black54,
+        elevation: 30,
             )
           : Container(),
     );
@@ -189,8 +191,9 @@ class _NotificationState extends State<Notification_alert> {
                           DateTime.fromMillisecondsSinceEpoch(
                               int.parse(document['timestamp']))),
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 12.0,
+                          fontFamily: "HANDGOTN",
                           fontStyle: FontStyle.italic),
                     ),
                     margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
