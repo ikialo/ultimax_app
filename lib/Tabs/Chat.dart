@@ -231,22 +231,37 @@ class ChatScreenState extends State<ChatScreen> {
         // Decides which type of post it is and shows accordingly
         children: <Widget>[
           Row(children: <Widget>[
+
             document['type'] == 0
                 // Text
-                ? Container(
-                    child: Text(
-                      document['content'],
-                      style: TextStyle(color: primaryColor),
-                    ),
-                    padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    width: 200.0,
-                    decoration: BoxDecoration(
-                        color: greyColor2,
-                        borderRadius: BorderRadius.circular(8.0)),
-                    margin: EdgeInsets.only(
-                        bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                        right: 10.0),
-                  )
+                ? Card(
+              color: Colors.black87,
+              child: Column(children: <Widget>[
+                SizedBox(height: 4,),
+                Text(
+                  DateFormat('dd/ MM/ yyyy [kk:mm]').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(document['timestamp']))),
+                  style: TextStyle(
+                      color: greyColor2,
+                      fontSize: 12.0,
+                      fontStyle: FontStyle.italic),
+                ),
+                Container(
+                  child: Text(
+                    document['content'],
+                    style: TextStyle(color: primaryColor),
+                  ),
+                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                  width: 200.0,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0)),
+                  margin: EdgeInsets.only(
+                      bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                      right: 10.0),
+                )
+              ],),
+            )
                 : document['type'] == 1
                     // Image
                     ? Container(
@@ -262,7 +277,7 @@ class ChatScreenState extends State<ChatScreen> {
                                 height: 200.0,
                                 padding: EdgeInsets.all(70.0),
                                 decoration: BoxDecoration(
-                                  color: greyColor2,
+                                  color: Colors.black87,
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(8.0),
                                   ),
@@ -314,18 +329,7 @@ class ChatScreenState extends State<ChatScreen> {
           ], mainAxisAlignment: MainAxisAlignment.end),
 
           // TIme under the messages
-          Container(
-            child: Text(
-              DateFormat('dd MMM kk:mm').format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                      int.parse(document['timestamp']))),
-              style: TextStyle(
-                  color: greyColor2,
-                  fontSize: 12.0,
-                  fontStyle: FontStyle.italic),
-            ),
-            margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-          )
+
         ],
       ),
             onTap:() {
@@ -352,7 +356,7 @@ class ChatScreenState extends State<ChatScreen> {
             children: <Widget>[
               Container(
                 child: Text(
-                  document['nickname'],
+                  document['nickname'] != null? document['nickname']: "",
                   style: TextStyle(
                       color: greyColor2,
                       fontSize: 12.0,
@@ -377,7 +381,7 @@ class ChatScreenState extends State<ChatScreen> {
                         height: 35.0,
                         padding: EdgeInsets.all(10.0),
                       ),
-                      imageUrl: document['SenderUrlImage'],
+                      imageUrl: document['SenderUrlImage'] != null? document["SenderUrlImage"]: "https://firebasestorage.googleapis.com/v0/b/ultimax-e4e58.appspot.com/o/icon_ultimax.jpg?alt=media&token=8c623e6d-4d8c-45d8-bf3d-82e0df08ce0f",
                       width: 35.0,
                       height: 35.0,
                       fit: BoxFit.cover,
@@ -399,7 +403,7 @@ class ChatScreenState extends State<ChatScreen> {
                           padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                           width: 200.0,
                           decoration: BoxDecoration(
-                              color: Colors.blueGrey,
+                              color: Colors.grey,
                               borderRadius: BorderRadius.circular(8.0)),
                           margin: EdgeInsets.only(left: 10.0),
                         )

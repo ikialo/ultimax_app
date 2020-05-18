@@ -67,7 +67,7 @@ class _NotificationState extends State<Notification_alert> {
               onPressed: () {
                 dialogbox_notice();
               },
-              backgroundColor: Colors.black54,
+              backgroundColor: Colors.blue,
         elevation: 30,
             )
           : Container(),
@@ -116,9 +116,22 @@ class _NotificationState extends State<Notification_alert> {
 //                  color: Colors.grey,
 //                  borderRadius: BorderRadius.circular(8.0)),
 //              margin: EdgeInsets.only(left: 10.0),
+
               child: Column(
                 // Decides which type of post it is and shows accordingly
                 children: <Widget>[
+                  Container(
+                    child: Text("ALERT "+
+                      DateFormat('dd/ MM/ yyyy [kk:mm]').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(document['timestamp']))),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14.0,
+                          ),
+                    ),
+                    margin: EdgeInsets.only( top: 5.0),
+                  ),
                   Column(children: <Widget>[
                     // Image
 
@@ -173,7 +186,7 @@ class _NotificationState extends State<Notification_alert> {
                     Container(
                       child: Text(
                         document['content'],
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white, fontSize: 17),
                       ),
                       padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                       width: 300.0,
@@ -185,21 +198,10 @@ class _NotificationState extends State<Notification_alert> {
                   ], mainAxisAlignment: MainAxisAlignment.start),
 
                   // TIme under the messages
-                  Container(
-                    child: Text(
-                      DateFormat('dd MMM kk:mm').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document['timestamp']))),
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 12.0,
-                          fontFamily: "HANDGOTN",
-                          fontStyle: FontStyle.italic),
-                    ),
-                    margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
-                  )
+
                 ],
-              ), color: Colors.grey, elevation: 10, borderOnForeground: true,
+              ), color: Colors.black54, elevation: 10, borderOnForeground: true,
+
             )));
   }
 

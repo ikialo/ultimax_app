@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ultimax2/AppBar/report_tab.dart';
 import 'package:ultimax2/Tabs/CallNumbers.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/Ultimax_Notificaiton.dart';
@@ -20,36 +21,42 @@ class TabSelection extends StatelessWidget {
     return MaterialApp(
         color: Colors.red,
         home: DefaultTabController(
-            length: 3,
+            length: 4,
             child: Scaffold(
               backgroundColor: black,
               appBar: AppBar(
                 elevation: 10,
                 backgroundColor: black,
-                title: Text("ULTIMAX Alert",
+                title: Text("ULTIMAX ALERT",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white
                         , fontFamily: "HANDGOTN")),
                 centerTitle: true,
                 bottom: TabBar(
-                  indicatorColor: Colors.white,
-                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.white,
+                  indicatorColor: Colors.blue,
+                  labelColor: Colors.blue,
                   tabs: [
-                    Tab(icon: Icon(Icons.chat)),
                     Tab(icon: Icon(Icons.notifications_active)),
+                    Tab(icon: Icon(Icons.chat)),
+
+                    Tab(icon: Icon(Icons.edit)),
                     Tab(icon: Icon(Icons.call)),
                   ],
                 ),
               ),
               body: TabBarView(
                 children: [
+
+                  Notification_alert(),
                   Chat(
                     peerId: peerId,
                     peerAvatar: peerAvatar,
                   ),
-                  Notification_alert(),
+                  Report(),
                   Numbers_Call(),
+
                 ],
               ),
             )));
