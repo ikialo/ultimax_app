@@ -731,6 +731,7 @@ class ChatScreenState extends State<ChatScreen> {
 
           // Button send message
           Material(
+
             child: new Container(
               margin: new EdgeInsets.symmetric(horizontal: 8.0),
               child: new IconButton(
