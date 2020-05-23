@@ -35,7 +35,7 @@ class TabSelection extends StatelessWidget {
                 centerTitle: true,
                 bottom: TabBar(
                   unselectedLabelColor: Colors.white,
-                  indicatorColor: Colors.blue,
+                  indicatorColor: Colors.blueAccent,
                   labelColor: Colors.blue,
                   tabs: [
                     Tab(icon: Icon(Icons.notifications_active)),

@@ -81,6 +81,20 @@ flutter:
     - "assets/icons/UTXALERT.jpg"
     - "assets/icons/bottom_dec.png"
     - "assets/icons/topdec.png"
+    - "assets/icons/press_icon_btn.png"
+    - "assets/icons/UTX_blue_big_bg.png"
+    - "assets/icons/UTX_blue_small_bg.png"
+    - "assets/icons/UTX_blk_big_bg.png"
+    - "assets/icons/UTX_blk_small_bg.png"
+    - "assets/icons/Ambulance.png"
+    - "assets/icons/Covid_logo.png"
+    - "assets/icons/familyViolence.png"
+    - "assets/icons/Fire.png"
+    - "assets/icons/Police.png"
+    - "assets/icons/PoliceAbuse.png"
+    - "assets/icons/UTX247.png"
+    - "assets/icons/UTXOffice.png"
+
 
 
   fonts:

@@ -13,6 +13,9 @@ class _Numbers_CallState extends State<Numbers_Call> {
   Color textColorbtn = Colors.white;
 
   _initCall(optCall) async {
+    if(optCall == 0){
+
+    }
     if (optCall == 1) {
       call("1800100");
     }
@@ -28,6 +31,12 @@ class _Numbers_CallState extends State<Numbers_Call> {
     if (optCall == 5) {
       call("3202364");
     }
+    if (optCall == 6) {
+      call("3202364");
+    }
+    if (optCall == 7) {
+      call("3202364");
+    }
   }
 
   void call(String number) => launch("tel:$number");
@@ -36,333 +45,448 @@ class _Numbers_CallState extends State<Numbers_Call> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          title: Text(
-            'Emergency Contacts',
-            style:  TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.white
-                , fontFamily: "HANDGOTN"),
-          ),
-          backgroundColor: Colors.white,
-          expandedHeight: 150.0,
-          flexibleSpace: FlexibleSpaceBar(
-            background:
-                Image.asset('assets/icons/photo.png', fit: BoxFit.cover),
-          ),
-        ),
-        SliverFixedExtentList(
-          itemExtent: 72.0,
-          delegate: SliverChildListDelegate(
-            [
+      backgroundColor: Colors.black,
+      body: SingleChildScrollView(child: Column(
+        children: <Widget>[
+          Container(
+              height: 70,
+              child:
+              Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                              AssetImage("assets/icons/UTX_blk_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("ULTIMAX 24/7",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  )),
+                          onTap: () {
+                            _initCall(0);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/UTX247.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                                AssetImage("assets/icons/UTX_blk_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blk_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
+          Container(
+              height: 70,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blk_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("ULTIMAX OFFICE",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                )),
+                          onTap: () {
+                            _initCall(1);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/UTXOffice.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blk_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blk_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
 
-              Card(
-                child: Padding(
-                  child: ListTile(
-                    title: Text("ULTIMAX",
-                        style:
-                        TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                            , fontFamily: "HANDGOTN")),
-                    onTap: () {
-                      _initCall(1);
-                    },
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          width: 30.0,
-                          height: 30.0,
+          SizedBox(height: 7,),
+          Container(
+              height: 70,
+              child:
+              Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blue_small_bg.png"),
                           fit: BoxFit.cover,
-                        )),
-                  ),
-                  padding: EdgeInsets.all(8),
-                ),
-                color: buttonColor,
-              ),
-              Card(
-                child: Padding(
-                  child: ListTile(
-                    title: Text("POLICE",
-                        style:
-                        TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                            , fontFamily: "HANDGOTN")
-                    ),
-                    onTap: () {
-                      _initCall(1);
-                    },
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          width: 30.0,
-                          height: 30.0,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  padding: EdgeInsets.all(8),
-                ),
-                color: buttonColor,
-              ),
+                        ),
+                      )),
 
-              Card(
-                child: Padding(
-                  child: ListTile(
-                    title: Text("Fire Service",
-                        style:
-                        TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                            , fontFamily: "HANDGOTN")),
-                    onTap: () {
-                      _initCall(2);
-                    },
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          width: 30.0,
-                          height: 30.0,
-                          fit: BoxFit.cover,
-                        )),
+                   Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("POLICE 24/7",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                 )),
+                          onTap: () {
+                            _initCall(2);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/Police.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                   ),
-                  padding: EdgeInsets.all(8),
-                ),
-                color: buttonColor,
-              ),
-              Card(
-                child: Padding(
-                  child: ListTile(
-                    title: Text("Ambulance",
-                        style:
-                        TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                            , fontFamily: "HANDGOTN")),
-                    onTap: () {
-                      _initCall(3);
-                    },
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          width: 30.0,
-                          height: 30.0,
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blue_big_bg.png"),
                           fit: BoxFit.cover,
-                        )),
-                  ),
-                  padding: EdgeInsets.all(8),
-                ),
-                color: buttonColor,
-              ),
-              Card(
-                child: Padding(
-                  child: ListTile(
-                    title: Text("COVID-19 HOTLINE",
-                        style:
-                        TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                            , fontFamily: "HANDGOTN")),
-                    onTap: () {
-                      _initCall(4);
-                    },
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          width: 30.0,
-                          height: 30.0,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  padding: EdgeInsets.all(8),
-                ),
-                color: buttonColor,
-              ),
-              Card(
-                child: Padding(
-                  child: ListTile(
-                    title: Text("POLICE ABUSE HOTLINE",
-                        style:
-                        TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
-                            , fontFamily: "HANDGOTN")),
-                    onTap: () {
-                      _initCall(5);
-                    },
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(50.0),
-                        child: Image.asset(
-                          'assets/icons/google_icon.png',
-                          width: 30.0,
-                          height: 30.0,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                  padding: EdgeInsets.all(8),
-                ),
-                color: buttonColor,
-              ),
+                        ),
+                      )),
+                ],
+              )),
 
-//              FlatButton(
-//                child: Container(
-//                  height: 70,
-//                  decoration: BoxDecoration(
-//                      color: buttonColor,
-//                      borderRadius: BorderRadius.circular(8.0)),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                    children: <Widget>[
-//                      Padding(
-//                        padding: EdgeInsets.all(5),
-//                        child: ClipRRect(
-//                            borderRadius: BorderRadius.circular(50.0),
-//                            child: Image.asset(
-//                              'assets/icons/google_icon.png',
-//                              width: 30.0,
-//                              height: 30.0,
-//                              fit: BoxFit.cover,
-//                            )),
-//                      ),
-//                      Text("FIRE SERVICE",
-//                          style: TextStyle(color: textColorbtn, fontSize: 30)),
-//                    ],
-//                  ),
-//                ),
-//                onPressed: () {
-//                  _initCall(2);
-//                },
-//              ),
-//              FlatButton(
-//                child: Container(
-//                  height: 70,
-//                  decoration: BoxDecoration(
-//                      color: buttonColor,
-//                      borderRadius: BorderRadius.circular(8.0)),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                    children: <Widget>[
-//                      Padding(
-//                        padding: EdgeInsets.all(5),
-//                        child: ClipRRect(
-//                            borderRadius: BorderRadius.circular(50.0),
-//                            child: Image.asset(
-//                              'assets/icons/google_icon.png',
-//                              width: 30.0,
-//                              height: 30.0,
-//                              fit: BoxFit.cover,
-//                            )),
-//                      ),
-//                      Text("AMBULANCE",
-//                          style: TextStyle(color: textColorbtn, fontSize: 30)),
-//                    ],
-//                  ),
-//                ),
-//                onPressed: () {
-//                  _initCall(3);
-//                },
-//              ),
-//              FlatButton(
-//                splashColor: buttonColor,
-//                child: Container(
-//                  height: 70,
-//                  decoration: BoxDecoration(
-//                      color: buttonColor,
-//                      borderRadius: BorderRadius.circular(8.0)),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                    children: <Widget>[
-//                      Padding(
-//                        padding: EdgeInsets.all(5),
-//                        child: ClipRRect(
-//                            borderRadius: BorderRadius.circular(50.0),
-//                            child: Image.asset(
-//                              'assets/icons/photo.jpg',
-//                              width: 40.0,
-//                              height: 40.0,
-//                              fit: BoxFit.cover,
-//                            )),
-//                      ),
-//                      Text("ULTIMAX",
-//                          style: TextStyle(color: textColorbtn, fontSize: 30)),
-//                    ],
-//                  ),
-//                ),
-//                onPressed: () {
-//                  _initCall(3);
-//                },
-//              ),
-//              FlatButton(
-//                splashColor: Colors.yellow,
-//                child: Container(
-//                  height: 70,
-//                  decoration: BoxDecoration(
-//                      color: buttonColor,
-//                      borderRadius: BorderRadius.circular(8.0)),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                    children: <Widget>[
-//                      Padding(
-//                        padding: EdgeInsets.all(5),
-//                        child: ClipRRect(
-//                            borderRadius: BorderRadius.circular(50.0),
-//                            child: Image.asset(
-//                              'assets/icons/photo.jpg',
-//                              width: 40.0,
-//                              height: 40.0,
-//                              fit: BoxFit.cover,
-//                            )),
-//                      ),
-//                      Text("COVID 19 HOTLINE",
-//                          style: TextStyle(color: textColorbtn, fontSize: 20)),
-//                    ],
-//                  ),
-//                ),
-//                onPressed: () {
-//                  _initCall(4);
-//                },
-//              ),
-//              FlatButton(
-//                splashColor: Colors.yellow,
-//                child: Container(
-//                  height: 70,
-//                  decoration: BoxDecoration(
-//                      color: buttonColor,
-//                      borderRadius: BorderRadius.circular(8.0)),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                    children: <Widget>[
-//                      Padding(
-//                        padding: EdgeInsets.all(5),
-//                        child: ClipRRect(
-//                            borderRadius: BorderRadius.circular(50.0),
-//                            child: Image.asset(
-//                              'assets/icons/photo.jpg',
-//                              width: 40.0,
-//                              height: 40.0,
-//                              fit: BoxFit.cover,
-//                            )),
-//                      ),
-//                      Text("POLICE ABUSE HOTLINE",
-//                          style: TextStyle(color: textColorbtn, fontSize: 20)),
-//                    ],
-//                  ),
-//                ),
-//                onPressed: () {
-//                  _initCall(5);
-//                },
-//              ),
-            ],
-          ),
-        ),
-      ],
+
+          Container(
+              height: 70,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("FIRE SERVICE",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                 )),
+                          onTap: () {
+                            _initCall(3);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/Fire.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blue_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
+          Container(
+              height: 70,
+              child:
+              Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("ST JOHNS AMBULANCE",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  )),
+                          onTap: () {
+                            _initCall(4);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/Ambulance.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blue_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
+
+
+          Container(
+              height: 70,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("FAMILY VIOLENCE",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  )),
+                          onTap: () {
+                            _initCall(5);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/familyViolence.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blue_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
+          Container(
+              height: 70,
+              child:
+              Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("POLICE ABUSE HOTLINE",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                 )),
+                          onTap: () {
+                            _initCall(6);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/PoliceAbuse.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blue_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
+
+
+          Container(
+              height: 70,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("COVID-19 HOTLINE",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                 )),
+                          onTap: () {
+                            _initCall(7);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/Covid_logo.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blue_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
+
+
+        ],
+      ),
     ));
   }
 }

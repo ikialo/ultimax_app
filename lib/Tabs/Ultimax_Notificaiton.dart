@@ -47,8 +47,9 @@ class _NotificationState extends State<Notification_alert> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body:Container(child: Stack(
         children: <Widget>[
+
           Column(
             children: <Widget>[
               // List of messages
@@ -60,6 +61,13 @@ class _NotificationState extends State<Notification_alert> {
             ],
           ),
         ],
+      ),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/icons/UTXALERT.jpg"),
+              fit: BoxFit.cover,
+            ),
+          )
       ),
       floatingActionButton: admin == true
           ? FloatingActionButton(
@@ -110,7 +118,8 @@ class _NotificationState extends State<Notification_alert> {
     return GestureDetector(
         child: Padding(
             padding: EdgeInsets.all(4.0),
-            child: Card(
+            child: Container(
+//              child: Card(
 
 //              decoration: BoxDecoration(
 //                  color: Colors.grey,
@@ -126,8 +135,9 @@ class _NotificationState extends State<Notification_alert> {
                           DateTime.fromMillisecondsSinceEpoch(
                               int.parse(document['timestamp']))),
                       style: TextStyle(
-                          color: Colors.grey,
+                          color: Colors.blueGrey,
                           fontSize: 14.0,
+                         fontWeight: FontWeight.bold
                           ),
                     ),
                     margin: EdgeInsets.only( top: 5.0),
@@ -200,9 +210,18 @@ class _NotificationState extends State<Notification_alert> {
                   // TIme under the messages
 
                 ],
-              ), color: Colors.black54, elevation: 10, borderOnForeground: true,
+//              ), color: Colors.black87, elevation: 10, borderOnForeground: true,
 
-            )));
+            ),
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueGrey),
+                  borderRadius: BorderRadius.circular(8.0),
+                  gradient: LinearGradient(
+                      colors: [Colors.black87,Colors.white12,Colors.black87]),
+              ),
+            )
+        )
+    );
   }
 
   void dialogbox_notice() {

@@ -49,6 +49,7 @@ class MainScreenState extends State<MainScreen> {
   String photo = null;
 
   bool isLoading = false;
+  String iconbtnPath;
 
 //  List<Choice> choices = const <Choice>[
 //    const Choice(title: 'Settings', icon: Icons.settings),
@@ -64,6 +65,11 @@ class MainScreenState extends State<MainScreen> {
 
     getURLPHOTO();
     setPrefs();
+    iconbtnPath ='assets/icons/photo.png';
+    iconbtnPath ='assets/icons/press_icon_btn.png';
+    iconbtnPath ='assets/icons/photo.png';
+
+
   }
 
   Future<void> registerNotification() async {
@@ -341,37 +347,80 @@ class MainScreenState extends State<MainScreen> {
                 child: Stack(
                   children: <Widget>[
 
-                    GestureDetector(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 10.0),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Hero(
-                            tag: "ultimax+logo",
-                            child: ClipRRect(
-                                borderRadius: BorderRadius.circular(50.0),
-                                child: Image.asset(
-                                  'assets/icons/photo.png',
-                                  width: 225,
-                                  height: 225.0,
-                                  fit: BoxFit.cover,
-                                )),
+//                    GestureDetector(child: Image.asset(iconbtnPath), onTapDown: (tap){
+//                      setState(() {
+//                                  iconbtnPath ='assets/icons/press_icon_btn.png';
+//
+//                      }
+//
+//
+//                      );
+//                    },
+//                    onTapUp: (tap){
+//                      setState(() {
+//                        iconbtnPath ='assets/icons/photo.png';
+//
+//                      });
+//                    },
+//                    ),
+
+                    Center(
+                      child: new Container(
+
+                        child: new Material(
+                          child: GestureDetector(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 10.0),
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Hero(
+                                    tag: "ultimax+logo",
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(50.0),
+                                        child: Image.asset(iconbtnPath
+                                          ,
+                                          width: 200,
+                                          height: 200.0,
+                                          fit: BoxFit.cover,
+                                        )),
+                                  ),
+                                ),
+                              ),
+
+                              key: Key("openTabOptions"),
+                              onTapUp: (tap){
+                                setState(() {
+                                  iconbtnPath ='assets/icons/photo.png';
+
+                                });
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TabSelection(
+                                              peerId: "messageboardid",
+                                              peerAvatar: 'photoUrl',
+                                            )));
+                              },
+
+                              onTapDown: (tap) {
+
+                                setState(() {
+                                  iconbtnPath ='assets/icons/press_icon_btn.png';
+
+                                });
+
+                              }
                           ),
+                          color: Colors.transparent,
                         ),
+                    decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50.0),),
+
                       ),
-                      
-                      key: Key("openTabOptions"),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    TabSelection(
-                                      peerId: "messageboardid",
-                                      peerAvatar: 'photoUrl',
-                                    )));
-                      }
                     ),
+
+
                     Positioned(
                       child: isLoading
                           ? Container(
