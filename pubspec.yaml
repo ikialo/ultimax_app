@@ -14,12 +14,12 @@ description: A new Flutter application.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore: ^0.13.4+1
+  cloud_firestore: ^0.13.4+2
   shared_preferences: ^0.5.6+2
 
   # The following adds the Cupertino Icons font to your application.
@@ -31,18 +31,26 @@ dependencies:
   image_picker: ^0.6.1+8
   firebase_storage: ^3.0.6
   cached_network_image: 2.0.0-rc.1
-  intl: ^0.15.7
   firebase_messaging: ^5.1.6
   flutter_local_notifications: ^0.8.4
   photo_view: ^0.5.0
   flutter_launcher_icons: ^0.7.4
+#  call_number: ^0.0.1
+  flutter_document_picker: ^4.0.0
+  url_launcher: ^5.4.5
+  provider: ^2.0.0+1
+  intl: ^0.16.0
+  circular_profile_avatar: ^1.0.6
+#  rate_my_app: ^0.6.0+2
+
+
 
 
 
 dev_dependencies:
-  flutter_test:
+  flutter_driver:
     sdk: flutter
-
+  test: any
 
 
 flutter_icons:
@@ -67,8 +75,34 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
-    - "assets/icons/photo.jpg"
+    - "assets/icons/photo.png"
     - "assets/icons/SYNARC.jpg"
+    - "assets/icons/google_icon.png"
+    - "assets/icons/UTXALERT.jpg"
+    - "assets/icons/bottom_dec.png"
+    - "assets/icons/topdec.png"
+    - "assets/icons/press_icon_btn.png"
+    - "assets/icons/UTX_blue_big_bg.png"
+    - "assets/icons/UTX_blue_small_bg.png"
+    - "assets/icons/UTX_blk_big_bg.png"
+    - "assets/icons/UTX_blk_small_bg.png"
+    - "assets/icons/Ambulance.png"
+    - "assets/icons/Covid_logo.png"
+    - "assets/icons/familyViolence.png"
+    - "assets/icons/Fire.png"
+    - "assets/icons/Police.png"
+    - "assets/icons/PoliceAbuse.png"
+    - "assets/icons/UTX247.png"
+    - "assets/icons/UTXOffice.png"
+
+
+
+  fonts:
+    - family: "HANDGOTN"
+      fonts:
+        - asset: "font/HANDGOTN.TTF"
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

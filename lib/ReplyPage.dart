@@ -512,13 +512,16 @@ class _ReplyPageState extends State<ReplyPage> {
               buildListMessage(),
 
               // Sticker
-              (isShowSticker ? Container() : Container()),
 
               // Input content
-              buildInput(),
             ],
           ),
 
+          Align(
+            child:               buildInput(),
+            alignment: Alignment.bottomLeft,
+
+          ),
           // Loading
           buildLoading()
         ],
@@ -528,26 +531,25 @@ class _ReplyPageState extends State<ReplyPage> {
   }
 
   Widget messageToReply() {
-    return Container(
-      child: Padding(
+    return Flexible(
+      child: Container(child: Padding(
               padding: EdgeInsets.only(left: 5, top: 3),
-              child: Container(
+
                 child: Text(
-                  message.length < 50 ? message: message.substring(0,255),
+                   message,
                   style: TextStyle(color: Colors.black, fontSize: 12.0),
                 ),
               ),
-            ),
+
 
 
       width: double.infinity,
-      height: message.length < 255 ? 50.0: 70.0,
       decoration: new BoxDecoration(
           //borderRadius: BorderRadius.circular(8.0),
           border:
               new Border(top: new BorderSide(color: Colors.yellow, width: 0.5)),
           color: Colors.black12),
-    );
+    ));
   }
 
   Widget buildSticker() {
@@ -680,11 +682,15 @@ class _ReplyPageState extends State<ReplyPage> {
 
   Widget buildListMessage() {
     return Flexible(
-      child: groupChatId != ''
+
+      flex: 2,
+      fit: FlexFit.loose,
+        child: groupChatId != ''
           ? Center(
               child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
           : StreamBuilder(
+
               stream: Firestore.instance
                   .collection('Replies')
                   .document(senderID)
