@@ -115,113 +115,114 @@ class _NotificationState extends State<Notification_alert> {
 
   Widget buildItem(int index, DocumentSnapshot document) {
     // Right (my message)
-    return GestureDetector(
-        child: Padding(
-            padding: EdgeInsets.all(4.0),
-            child: Container(
-//              child: Card(
 
-//              decoration: BoxDecoration(
-//                  color: Colors.grey,
-//                  borderRadius: BorderRadius.circular(8.0)),
-//              margin: EdgeInsets.only(left: 10.0),
+    if (document['postToAlert'] == true){
+      return
+        GestureDetector(
+            child: Padding(
+                padding: EdgeInsets.all(4.0),
+                child: Container(
 
-              child: Column(
-                // Decides which type of post it is and shows accordingly
-                children: <Widget>[
-                  Container(
-                    child: Text("ALERT "+
-                      DateFormat('dd/ MM/ yyyy [kk:mm]').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document['timestamp']))),
-                      style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 14.0,
-                         fontWeight: FontWeight.bold
+
+                  child: Column(
+                    // Decides which type of post it is and shows accordingly
+                    children: <Widget>[
+                      Container(
+                        child: Text("ALERT "+
+                            DateFormat('dd/ MM/ yyyy [kk:mm]').format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    int.parse(document['timestamp']))),
+                          style: TextStyle(
+                              color: Colors.blueGrey,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold
                           ),
-                    ),
-                    margin: EdgeInsets.only( top: 5.0),
-                  ),
-                  Column(children: <Widget>[
-                    // Image
+                        ),
+                        margin: EdgeInsets.only( top: 5.0),
+                      ),
+                      Column(children: <Widget>[
+                        // Image
 
-                    document["attachment"] != "no_image"?
-                    Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Container(
-                          child: FlatButton(
-                            child: Material(
-                              child: CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.yellow),
-                                  ),
-                                  width: 200.0,
-                                  height: 200.0,
-                                  padding: EdgeInsets.all(70.0),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueGrey,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(8.0),
+                        document["attachment"] != "no_image"?
+                        Padding(
+                            padding: EdgeInsets.only(top: 8.0),
+                            child: Container(
+                              child: FlatButton(
+                                child: Material(
+                                  child: CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                      child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                            Colors.yellow),
+                                      ),
+                                      width: 200.0,
+                                      height: 200.0,
+                                      padding: EdgeInsets.all(70.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueGrey,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Material(
-                                  child: Image.asset(
-                                    'images/img_not_available.jpeg',
+                                    errorWidget: (context, url, error) => Material(
+                                      child: Image.asset(
+                                        'images/img_not_available.jpeg',
+                                        width: 200.0,
+                                        height: 200.0,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                      clipBehavior: Clip.hardEdge,
+                                    ),
+                                    imageUrl: document['attachment'],
                                     width: 200.0,
                                     height: 200.0,
                                     fit: BoxFit.cover,
                                   ),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8.0),
-                                  ),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0)),
                                   clipBehavior: Clip.hardEdge,
                                 ),
-                                imageUrl: document['attachment'],
-                                width: 200.0,
-                                height: 200.0,
-                                fit: BoxFit.cover,
+                                onPressed: () {},
+                                padding: EdgeInsets.all(0),
                               ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(8.0)),
-                              clipBehavior: Clip.hardEdge,
-                            ),
-                            onPressed: () {},
-                            padding: EdgeInsets.all(0),
+                              margin: EdgeInsets.only(bottom: 10.0, right: 10.0),
+                            )): Container(),
+                        Container(
+                          child: Text(
+                            document['content'],
+                            style: TextStyle(color: Colors.white, fontSize: 17),
                           ),
+                          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          width: 300.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0)),
                           margin: EdgeInsets.only(bottom: 10.0, right: 10.0),
-                        )): Container(),
-                    Container(
-                      child: Text(
-                        document['content'],
-                        style: TextStyle(color: Colors.white, fontSize: 17),
-                      ),
-                      padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                      width: 300.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0)),
-                      margin: EdgeInsets.only(bottom: 10.0, right: 10.0),
-                    )
-                    // Sticker
-                  ], mainAxisAlignment: MainAxisAlignment.start),
+                        )
+                        // Sticker
+                      ], mainAxisAlignment: MainAxisAlignment.start),
 
-                  // TIme under the messages
+                      // TIme under the messages
 
-                ],
+                    ],
 //              ), color: Colors.black87, elevation: 10, borderOnForeground: true,
 
-            ),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueGrey),
-                  borderRadius: BorderRadius.circular(8.0),
-                  gradient: LinearGradient(
-                      colors: [Colors.black87,Colors.white12,Colors.black87]),
-              ),
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blueGrey),
+                    borderRadius: BorderRadius.circular(8.0),
+                    gradient: LinearGradient(
+                        colors: [Colors.black87,Colors.white12,Colors.black87]),
+                  ),
+                )
             )
-        )
-    );
+        );
+    }
+    else{return Container();}
+
   }
 
   void dialogbox_notice() {

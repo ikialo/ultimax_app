@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ultimax2/AppBar/report_tab.dart';
 import 'package:ultimax2/Tabs/CallNumbers.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
+import 'package:ultimax2/Tabs/ReportPage.dart';
 import 'package:ultimax2/Tabs/Ultimax_Notificaiton.dart';
 
 
@@ -54,7 +54,8 @@ class TabSelection extends StatelessWidget {
                     peerId: peerId,
                     peerAvatar: peerAvatar,
                   ),
-                  Report(),
+                  Report( peerId: peerId,
+                    peerAvatar: peerAvatar,),
                   Numbers_Call(),
 
                 ],
