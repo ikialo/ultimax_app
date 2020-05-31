@@ -10,10 +10,12 @@ import 'package:flutter_document_picker/flutter_document_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ultimax2/ReplyPage.dart';
 
 import '../fullPhoto.dart';
+import '../providerClass.dart';
 
 class Report extends StatelessWidget {
   final String peerId;
@@ -55,6 +57,8 @@ class ReportScreenState extends State<ReportScreen> {
   Color black = Colors.black;
 
   var imageURL;
+  TextEditingController _editingController = new TextEditingController() ;
+
 
   ReportScreenState({Key key, @required this.peerId, @required this.peerAvatar});
 
@@ -329,16 +333,18 @@ class ReportScreenState extends State<ReportScreen> {
 
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueGrey),
+//                    border: Border.all(color: Colors.blueGrey),
                     borderRadius: BorderRadius.circular(8.0),
-                    gradient: LinearGradient(
-                        colors: [Colors.black87,Colors.white12,Colors.black87]),
+                    image: DecorationImage(
+                      image: AssetImage("assets/icons/bg_chat.png"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 )
             )
         );
     } else if(admin == true && document['idFrom'] !="ultimaxAlertAdmin") {
-      // Left (peer message)
+      // if signed in as admin
 
       return
         GestureDetector(
@@ -438,10 +444,12 @@ class ReportScreenState extends State<ReportScreen> {
 
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueGrey),
+//                    border: Border.all(color: Colors.blueGrey),
                     borderRadius: BorderRadius.circular(8.0),
-                    gradient: LinearGradient(
-                        colors: [Colors.black87,Colors.white12,Colors.black87]),
+                    image: DecorationImage(
+                      image: AssetImage("assets/icons/bg_chat.png"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 )
             )
@@ -488,6 +496,15 @@ class ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    ChangeTitle changeTitle = Provider.of<ChangeTitle>(context);
+
+
+    setState(() {
+      changeTitle.setTitle("Report");
+    });
+    print("get: "+changeTitle.getTitle());
+
     return WillPopScope(
       child: Container(
           child: Stack(
@@ -510,10 +527,7 @@ class ReportScreenState extends State<ReportScreen> {
             ],
           ),
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/icons/UTXALERT.jpg"),
-              fit: BoxFit.cover,
-            ),
+
           )),
       onWillPop: onBackPress,
     );
@@ -634,7 +648,7 @@ class ReportScreenState extends State<ReportScreen> {
     try {
       await Firestore.instance.collection('Notice').document("Notice_").collection("Ultimax").document(doc.documentID).updateData({
         'postToAlert': true,
-
+        'content': _editingController.text
       });
     } catch (e) {
       print(e.toString());
@@ -642,6 +656,9 @@ class ReportScreenState extends State<ReportScreen> {
   }
 
   Future<Null> openDialog(DocumentSnapshot document) async {
+
+
+    _editingController.text = document ["content"];
     switch (await showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -677,6 +694,12 @@ class ReportScreenState extends State<ReportScreen> {
                     ),
                   ],
                 ),
+              ),
+              TextField(
+                controller: _editingController,
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: null,
               ),
               SimpleDialogOption(
                 onPressed: () {

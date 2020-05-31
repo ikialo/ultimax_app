@@ -9,19 +9,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ultimax2/TabParent.dart';
 import 'package:ultimax2/Tabs/CallNumbers.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/Private_Message.dart';
 import 'package:ultimax2/Tabs/Ultimax_Notificaiton.dart';
+import 'package:ultimax2/providerClass.dart';
 
 import 'AppBar/mainDrawer.dart';
 import 'AppBar/tab_selection.dart';
 import 'AppBar/Settings.dart';
 import 'SignIn/UserSignIN.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(ChangeNotifierProvider<ChangeTitle> (
+
+    child: MyApp(),
+   create: (_) => ChangeTitle("Alert"),));
+
+
+
+
 
 class MainScreen extends StatefulWidget {
   final String currentUserId;
@@ -51,6 +60,8 @@ class MainScreenState extends State<MainScreen> {
   bool isLoading = false;
   String iconbtnPath;
 
+  double imageWidth, imageHeight;
+
 //  List<Choice> choices = const <Choice>[
 //    const Choice(title: 'Settings', icon: Icons.settings),
 //    const Choice(title: 'Log out', icon: Icons.exit_to_app),
@@ -68,6 +79,11 @@ class MainScreenState extends State<MainScreen> {
     iconbtnPath ='assets/icons/photo.png';
     iconbtnPath ='assets/icons/press_icon_btn.png';
     iconbtnPath ='assets/icons/photo.png';
+
+    setState(() {
+      imageHeight =200;
+      imageWidth = 200;
+    });
 
 
   }
@@ -300,6 +316,8 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    ChangeTitle ct = Provider.of<ChangeTitle>(context);
     return Scaffold(
         backgroundColor: Colors.black12,
 
@@ -341,28 +359,15 @@ class MainScreenState extends State<MainScreen> {
         drawer: Drawer(
             child: DrawMain(currentUserId: currentUserId,)
         ),
-        body: SafeArea(
+        body: ChangeNotifierProvider<ChangeTitle>(child:
+        
+        SafeArea(
           child: WillPopScope(
             child: Container(
                 child: Stack(
                   children: <Widget>[
 
-//                    GestureDetector(child: Image.asset(iconbtnPath), onTapDown: (tap){
-//                      setState(() {
-//                                  iconbtnPath ='assets/icons/press_icon_btn.png';
-//
-//                      }
-//
-//
-//                      );
-//                    },
-//                    onTapUp: (tap){
-//                      setState(() {
-//                        iconbtnPath ='assets/icons/photo.png';
-//
-//                      });
-//                    },
-//                    ),
+
 
                     Center(
                       child: new Container(
@@ -379,8 +384,8 @@ class MainScreenState extends State<MainScreen> {
                                         borderRadius: BorderRadius.circular(50.0),
                                         child: Image.asset(iconbtnPath
                                           ,
-                                          width: 200,
-                                          height: 200.0,
+                                          width: imageWidth,
+                                          height:imageHeight,
                                           fit: BoxFit.cover,
                                         )),
                                   ),
@@ -391,7 +396,8 @@ class MainScreenState extends State<MainScreen> {
                               onTapUp: (tap){
                                 setState(() {
                                   iconbtnPath ='assets/icons/photo.png';
-
+                                  imageWidth = 200;
+                                  imageHeight =200;
                                 });
                                 Navigator.push(
                                     context,
@@ -408,6 +414,8 @@ class MainScreenState extends State<MainScreen> {
                                 setState(() {
                                   iconbtnPath ='assets/icons/press_icon_btn.png';
 
+                                  imageWidth = 350;
+                                  imageHeight =350;
                                 });
 
                               }
@@ -465,127 +473,18 @@ class MainScreenState extends State<MainScreen> {
             ),
             onWillPop: onBackPress,
           ),
-        ));
+        ),
+
+          create: (BuildContext context) {ChangeTitle("Alert");},),
+
+
+    );
   }
 
-//  Widget buildItem(BuildContext context, DocumentSnapshot document) {
-//    if (document['id'] == currentUserId) {
-//      return Container();
-//    } else {
-//      return Container(
-//        child: FlatButton(
-//          child: Row(
-//            children: <Widget>[
-//              Material(
-//                child: document['photoUrl'] != null
-//                    ? CachedNetworkImage(
-//                        placeholder: (context, url) => Container(
-//                          child: CircularProgressIndicator(
-//                            strokeWidth: 1.0,
-//                            valueColor:
-//                                AlwaysStoppedAnimation<Color>(Colors.yellow),
-//                          ),
-//                          width: 50.0,
-//                          height: 50.0,
-//                          padding: EdgeInsets.all(15.0),
-//                        ),
-//                        imageUrl: document['photoUrl'],
-//                        width: 50.0,
-//                        height: 50.0,
-//                        fit: BoxFit.cover,
-//                      )
-//                    : Icon(
-//                        Icons.account_circle,
-//                        size: 50.0,
-//                        color: Colors.grey,
-//                      ),
-//                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-//                clipBehavior: Clip.hardEdge,
-//              ),
-//              Flexible(
-//                child: Container(
-//                  child: Column(
-//                    children: <Widget>[
-//                      Container(
-//                        child: Text(
-//                          'Nickname: ${document['nickname']}',
-//                          style: TextStyle(color: Colors.blue),
-//                        ),
-//                        alignment: Alignment.centerLeft,
-//                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
-//                      ),
-//                      Container(
-//                        child: Text(
-//                          'About me: ${document['aboutMe'] ?? 'Not available'}',
-//                          style: TextStyle(color: Colors.blue),
-//                        ),
-//                        alignment: Alignment.centerLeft,
-//                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-//                      )
-//                    ],
-//                  ),
-//                  margin: EdgeInsets.only(left: 20.0),
-//                ),
-//              ),
-//            ],
-//          ),
-//          onPressed: () {
-//            Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                    builder: (context) =>
-////                        Chat(
-//////                      peerId: document.documentID,
-//////                      peerAvatar: document['photoUrl'],
-//////                    )
-//                        TabSelection(
-//                          peerId: "messageboardid",
-//                          peerAvatar: document['photoUrl'],
-//                        )));
-//          },
-//          color: Colors.grey,
-//          padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-//          shape:
-//              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-//        ),
-//        margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
-//      );
-//    }
-//  }
-//}
-
-//class Choice {
-//  const Choice({this.title, this.icon});
-//
-//  final String title;
-//  final IconData icon;
-//}
-
-//void main() => runApp(new MediaQuery(
-//    data: new MediaQueryData(), child: new MaterialApp(home: new MyApp())));
-//
-//class MyApp extends StatelessWidget {
-//  // This widget is the root of your application.
-//  @override
-//  Widget build(BuildContext context) {
-//    return MaterialApp(
-//      title: 'Flutter Demo',
-//      theme: ThemeData(
-//        // This is the theme of your application.
-//        //
-//        // Try running your application with "flutter run". You'll see the
-//        // application has a blue toolbar. Then, without quitting the app, try
-//        // changing the primarySwatch below to Colors.green and then invoke
-//        // "hot reload" (press "r" in the console where you ran "flutter run",
-//        // or simply save your changes to "hot reload" in a Flutter IDE).
-//        // Notice that the counter didn't reset back to zero; the application
-//        // is not restarted.
-//        primarySwatch: Colors.blue,
-//      ),
-//      home: _MyHomePageState(),
-//    );
-//  }
-//}
 
 //
 }
+
+
+
+

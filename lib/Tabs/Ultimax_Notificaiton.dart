@@ -6,9 +6,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import "package:flutter/material.dart";
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ultimax2/DialogNotice/dialog_content.dart';
+
+import '../providerClass.dart';
 
 class Notification_alert extends StatefulWidget {
   @override
@@ -46,6 +49,11 @@ class _NotificationState extends State<Notification_alert> {
 
   @override
   Widget build(BuildContext context) {
+
+//    final empass = Provider.of<EmailPass>(context);
+//
+//    empass.titleSet("Alert");
+
     return Scaffold(
       body:Container(child: Stack(
         children: <Widget>[
@@ -133,7 +141,7 @@ class _NotificationState extends State<Notification_alert> {
                                 DateTime.fromMillisecondsSinceEpoch(
                                     int.parse(document['timestamp']))),
                           style: TextStyle(
-                              color: Colors.blueGrey,
+                              color: Colors.grey,
                               fontSize: 14.0,
                               fontWeight: FontWeight.bold
                           ),
@@ -212,11 +220,14 @@ class _NotificationState extends State<Notification_alert> {
 
                   ),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueGrey),
+//                    border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(8.0),
-                    gradient: LinearGradient(
-                        colors: [Colors.black87,Colors.white12,Colors.black87]),
+                    image: DecorationImage(
+                      image: AssetImage("assets/icons/bg_chat.png"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                  margin: EdgeInsets.only(left: 15, right: 15, bottom: 5),
                 )
             )
         );

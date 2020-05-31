@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../providerClass.dart';
 
 // ignore: camel_case_types
 class Numbers_Call extends StatefulWidget {
@@ -14,29 +17,36 @@ class _Numbers_CallState extends State<Numbers_Call> {
 
   _initCall(optCall) async {
     if(optCall == 0){
-
+      call("71665710");
     }
     if (optCall == 1) {
-      call("1800100");
+      call("3232347");
     }
     if (optCall == 2) {
-      call("110");
+      call("1800100");
     }
     if (optCall == 3) {
-      call("000");
+      call("110");
     }
     if (optCall == 4) {
-      call("1800200");
+      call("111");
     }
     if (optCall == 5) {
       call("3202364");
     }
     if (optCall == 6) {
-      call("3202364");
+      call("71508000");
     }
     if (optCall == 7) {
-      call("3202364");
+      call("1800200");
     }
+    if (optCall == 8) {
+      call("70908000");
+    }
+    if (optCall == 9) {
+      call("70311573");
+    }
+
   }
 
   void call(String number) => launch("tel:$number");
@@ -44,6 +54,14 @@ class _Numbers_CallState extends State<Numbers_Call> {
 
   @override
   Widget build(BuildContext context) {
+
+    ChangeTitle changeTitle = Provider.of<ChangeTitle>(context);
+
+
+    setState(() {
+      changeTitle.setTitle("Contacts");
+    });
+    print(changeTitle.getTitle());
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(child: Column(
@@ -459,6 +477,115 @@ class _Numbers_CallState extends State<Numbers_Call> {
                               borderRadius: BorderRadius.circular(50.0),
                               child: Image.asset(
                                 'assets/icons/Covid_logo.png',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blue_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
+          Container(
+              height: 70,
+              child:
+              Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("PNG POWER",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              )),
+                          onTap: () {
+                            _initCall(8);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/pngpower.jpeg',
+                                width: 30.0,
+                                height: 30.0,
+                                fit: BoxFit.cover,
+                              )),
+                        ),
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image:
+                            AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                            fit: BoxFit.cover,
+                          ),
+                        )),
+                    alignment: Alignment.center,
+                  ),
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/icons/UTX_blue_big_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                ],
+              )),
+
+
+          Container(
+              height: 70,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                      height: 10,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image:
+                          AssetImage("assets/icons/UTX_blue_small_bg.png"),
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  Align(
+                    child: Container(
+                        height: 50,
+                        child: ListTile(
+                          title: Text("EDA RANU",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              )),
+                          onTap: () {
+                            _initCall(9);
+                          },
+                          leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(50.0),
+                              child: Image.asset(
+                                'assets/icons/water.png',
                                 width: 30.0,
                                 height: 30.0,
                                 fit: BoxFit.cover,

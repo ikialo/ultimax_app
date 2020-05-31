@@ -118,7 +118,7 @@ class _SignInFormState extends State<RegisterForm> {
         onPressed: () {
           passCredentialToParent();
         },
-        child: Text("Login", textAlign: TextAlign.center, style: style),
+        child: Text("Add User", textAlign: TextAlign.center, style: style),
       ),
     );
 
@@ -159,7 +159,19 @@ class _SignInFormState extends State<RegisterForm> {
                             ),
                           ],
                         ),
-                      ))),)
+                      ))),),
+              Positioned(
+                child:isLoading
+                    ? Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    ),
+                  ),
+                  color: Colors.white.withOpacity(0.8),
+                )
+                    : Container(),
+              ),
             ],),
 
             decoration: BoxDecoration(
@@ -173,6 +185,10 @@ class _SignInFormState extends State<RegisterForm> {
   }
 
   Future<void> passCredentialToParent() async {
+
+    setState(() {
+      isLoading = true;
+    });
     prefs = await SharedPreferences.getInstance();
     try {
       FirebaseUser user = await Auth().signUp(textEditingUserName.text,

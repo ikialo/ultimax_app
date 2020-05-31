@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:ultimax2/Tabs/CallNumbers.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/ReportPage.dart';
 import 'package:ultimax2/Tabs/Ultimax_Notificaiton.dart';
+
+import '../providerClass.dart';
 
 
 class TabSelection extends StatelessWidget {
@@ -11,12 +14,19 @@ class TabSelection extends StatelessWidget {
 
   var primaryColor = Colors.blue;
 
+
   TabSelection({Key key, @required this.peerId, @required this.peerAvatar})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Color black = Colors.black;
+
+
+    var changeTitle = Provider.of<ChangeTitle>(context);
+
+    print("title: "+changeTitle.getTitle());
+
 
     return MaterialApp(
         color: Colors.red,
@@ -27,11 +37,22 @@ class TabSelection extends StatelessWidget {
               appBar: AppBar(
                 elevation: 10,
                 backgroundColor: black,
-                title: Text("ULTIMAX ALERT",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white
-                        , fontFamily: "HANDGOTN")),
+                title:  Text("ALert",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white
+                          , fontFamily: "HANDGOTN")),
+//                title: Consumer<ChangeTitle> (builder: (BuildContext context, ChangeTitle value, Widget child) {
+//
+//                  print("this title: "+value.getTitle());
+//                  return  Text(value.getTitle(),
+//                      style: TextStyle(
+//                          fontWeight: FontWeight.bold,
+//                          color: Colors.white
+//                          , fontFamily: "HANDGOTN"));
+//                },),
+//
+
                 centerTitle: true,
                 bottom: TabBar(
                   unselectedLabelColor: Colors.white,
@@ -40,7 +61,6 @@ class TabSelection extends StatelessWidget {
                   tabs: [
                     Tab(icon: Icon(Icons.notifications_active)),
                     Tab(icon: Icon(Icons.chat)),
-
                     Tab(icon: Icon(Icons.edit)),
                     Tab(icon: Icon(Icons.call)),
                   ],

@@ -59,6 +59,7 @@ class _RegisterFormState extends State<Settings> {
     setPrefs();
     isLoading = false;
     attachmentAvail = false;
+    imageFile = null;
   }
 
   @override
@@ -86,158 +87,178 @@ class _RegisterFormState extends State<Settings> {
                 style: TextStyle(fontFamily: "HANDGOTN"),
               ),
             )),
-        body: SingleChildScrollView(
-            child: Center(
-          child: Column(
+        body:
+
+           Stack(
             children: <Widget>[
-              SizedBox(
-                height: 35,
-              ),
-              Text(
-                "Profile Picture",
-                style: TextStyle(fontFamily: "HANDGOTN"),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              InkWell(
-                child: CircularProfileAvatar(
-                  '',
-                  child: imageFile != null
-                      ? Image.file(imageFile)
-                      : Icon(Icons.account_circle),
-                  borderColor: Colors.black,
-                  borderWidth: 2,
-                  elevation: 2,
-                  radius: 50,
-                ),
-                onTap: getImage,
-                splashColor: Colors.black,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-
-              Form(
-                  key: _form,
-                  child: Column(children: <Widget>[
-                    Text(
-                      "User Name",
-                      style: TextStyle(fontFamily: "HANDGOTN"),
+              SingleChildScrollView(child:
+           Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 35,
+                  ),
+                  Text(
+                    "Profile Picture",
+                    style: TextStyle(fontFamily: "HANDGOTN"),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  InkWell(
+                    child: CircularProfileAvatar(
+                      '',
+                      child: imageFile != null
+                          ? Image.file(imageFile)
+                          : Icon(Icons.account_circle),
+                      borderColor: Colors.black,
+                      borderWidth: 2,
+                      elevation: 2,
+                      radius: 50,
                     ),
-                    Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blueGrey)),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20.0),
-                            child: TextFormField(
-                              keyboardType: TextInputType.multiline,
-                              minLines: 1,
-                              maxLines: null,
-                              validator: (val) {
-                                if (val.isEmpty) return 'Empty';
-                                return null;
-                              },
+                    onTap: getImage,
+                    splashColor: Colors.black,
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
 
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15.0,
-                                  fontFamily: "HANDGOTN"),
-                              controller: textEditingController,
-                              decoration: InputDecoration.collapsed(
-                                hintText: 'Input New Profile Name',
-                                hintStyle: TextStyle(
-                                    color: Colors.blueGrey, fontFamily: "HANDGOTN"),
-                              ),
+                  Form(
+                      key: _form,
+                      child: Column(children: <Widget>[
+                        Text(
+                          "User Name",
+                          style: TextStyle(fontFamily: "HANDGOTN"),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueGrey)),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20.0),
+                                child: TextFormField(
+                                  keyboardType: TextInputType.multiline,
+                                  minLines: 1,
+                                  maxLines: null,
+                                  validator: (val) {
+                                    if (val.isEmpty) return 'Empty';
+                                    return null;
+                                  },
+
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15.0,
+                                      fontFamily: "HANDGOTN"),
+                                  controller: textEditingController,
+                                  decoration: InputDecoration.collapsed(
+                                    hintText: 'Input New Profile Name',
+                                    hintStyle: TextStyle(
+                                        color: Colors.blueGrey, fontFamily: "HANDGOTN"),
+                                  ),
 //          focusNode: focusNode,
-                            ),
-                          ),
-                        )),
-                    Text(
-                      "Change Password",
-                      style: TextStyle(fontFamily: "HANDGOTN"),
+                                ),
+                              ),
+                            )),
+                        Text(
+                          "Change Password",
+                          style: TextStyle(fontFamily: "HANDGOTN"),
+                        ),
+
+                        Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueGrey)),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20.0),
+                                child: TextFormField(
+                                  validator: (val) {
+                                    if (val.length < 6) return "password must be 6 characters long";
+
+                                    if (val.isEmpty) return 'Empty';
+                                    return null;
+                                  },
+
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15.0,
+                                      fontFamily: "HANDGOTN"),
+                                  controller: textEditingPassword,
+                                  decoration: InputDecoration.collapsed(
+                                    hintText: 'New Password',
+                                    hintStyle: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontFamily: "HANDGOTN"),
+                                  ),
+//          focusNode: focusNode,
+                                ),
+                              ),
+                            )),
+                        Padding(
+                            padding: EdgeInsets.all(20),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.blueGrey)),
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20.0),
+                                child: TextFormField(
+                                  validator: (val) {
+                                    if (val.isEmpty) return 'Empty';
+                                    if (val != textEditingPassword.text)
+                                      return 'Not Match';
+                                    return null;
+                                  },
+
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15.0,
+                                      fontFamily: "HANDGOTN"),
+                                  controller: textEditingPasswordConfirm,
+                                  decoration: InputDecoration.collapsed(
+                                    hintText: 'Confirm Password',
+                                    hintStyle: TextStyle(
+                                        color: Colors.blueGrey,
+                                        fontFamily: "HANDGOTN"),
+                                  ),
+//          focusNode: focusNode,
+                                ),
+                              ),
+                            )),
+                      ])),
+                  FlatButton(
+                    onPressed: () {
+                      if (_form.currentState.validate()) {
+                        onUpdateProfile(
+                            textEditingController.text, prefs.getString("id"));
+                      }
+                    },
+                    color: Colors.black,
+                    child: Text(
+                      "Submit",
+                      style: TextStyle(color: Colors.white, fontFamily: "HANDGOTN"),
                     ),
-
-                    Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blueGrey)),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20.0),
-                            child: TextFormField(
-                              validator: (val) {
-                                if (val.length < 6) return "password must be 6 characters long";
-
-                                if (val.isEmpty) return 'Empty';
-                                return null;
-                              },
-
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15.0,
-                                  fontFamily: "HANDGOTN"),
-                              controller: textEditingPassword,
-                              decoration: InputDecoration.collapsed(
-                                hintText: 'New Password',
-                                hintStyle: TextStyle(
-                                    color: Colors.blueGrey,
-                                    fontFamily: "HANDGOTN"),
-                              ),
-//          focusNode: focusNode,
-                            ),
-                          ),
-                        )),
-                    Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blueGrey)),
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20.0),
-                            child: TextFormField(
-                              validator: (val) {
-                                if (val.isEmpty) return 'Empty';
-                                if (val != textEditingPassword.text)
-                                  return 'Not Match';
-                                return null;
-                              },
-
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15.0,
-                                  fontFamily: "HANDGOTN"),
-                              controller: textEditingPasswordConfirm,
-                              decoration: InputDecoration.collapsed(
-                                hintText: 'Confirm Password',
-                                hintStyle: TextStyle(
-                                    color: Colors.blueGrey,
-                                    fontFamily: "HANDGOTN"),
-                              ),
-//          focusNode: focusNode,
-                            ),
-                          ),
-                        )),
-                  ])),
-              FlatButton(
-                onPressed: () {
-                  if (_form.currentState.validate()) {
-                    onUpdateProfile(
-                        textEditingController.text, prefs.getString("id"));
-                  }
-                },
-                color: Colors.black,
-                child: Text(
-                  "Submit",
-                  style: TextStyle(color: Colors.white, fontFamily: "HANDGOTN"),
-                ),
-                splashColor: Colors.yellow,
+                    splashColor: Colors.yellow,
+                  ),
+                ],
+              ),),
+              Align(
+                alignment: Alignment.center,
+                child:isLoading
+                    ? Container(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                    ),
+                  ),
+                  color: Colors.white.withOpacity(0.8),
+                )
+                    : Container(),
               ),
-            ],
+            ]
+
           ),
-        )));
+
+    );
   }
 
   Future getImage() async {
@@ -245,11 +266,12 @@ class _RegisterFormState extends State<Settings> {
 
     if (imageFile != null) {
       setState(() {
-        isLoading = true;
+       // isLoading = true;
         attachmentAvail = true;
       });
       // uploadFile();
     }
+   
   }
 
   void checkValid() {
@@ -277,7 +299,13 @@ class _RegisterFormState extends State<Settings> {
   Future<void> onUpdateProfile(String content, uid) async {
     // type: 0 = text, 1 = image, 2 = sticker
 
-    await uploadFile();
+    setState(() {
+      isLoading = true;
+    });
+
+    if (imageFile != null) {
+      await uploadFile();
+    }
     UserUpdateInfo info = new UserUpdateInfo();
 
 //    await FirebaseAuth.instance.currentUser().then((onValue){
@@ -287,11 +315,10 @@ class _RegisterFormState extends State<Settings> {
 
     if (content.trim() != '') {
       info.displayName = content;
-      info.photoUrl = imageUrl;
-
-
-
-
+      if (imageFile != null) {
+        info.photoUrl = imageUrl;
+      }
+      print("before update");
 
       await Firestore.instance.collection('users').document(uid).updateData({
         'nickname': content,
@@ -301,19 +328,29 @@ class _RegisterFormState extends State<Settings> {
       prefs.setString('nickname', content);
       prefs.setString("photoUrl", imageUrl);
 
+      print("before FBU");
       FirebaseUser fbu = await FirebaseAuth.instance.currentUser();
 
+      print("after FBU");
+
       await fbu.updateProfile(info);
-      await fbu.updatePassword(textEditingPassword.text);
+      print("after UP update");
+      await fbu.updatePassword(textEditingPasswordConfirm.text);
+      print("after pw update");
 
       textEditingController.clear();
       textEditingPassword.clear();
       textEditingPasswordConfirm.clear();
 
+      setState(() {
+        isLoading = false;
+      });
       await handleSignOut();
 
     }
-
+    setState(() {
+      isLoading = false;
+    });
   }
 
   void adminSetFalse() async {
@@ -327,10 +364,11 @@ class _RegisterFormState extends State<Settings> {
       isLoading = true;
       //onSendMessage(imageUrl);
     });
+    
 
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(imageFile);
+    StorageUploadTask uploadTask = reference.putFile(imageFile );
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
 
     await storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
