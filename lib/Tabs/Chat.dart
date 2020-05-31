@@ -10,10 +10,12 @@ import 'package:flutter_document_picker/flutter_document_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ultimax2/ReplyPage.dart';
 
 import '../fullPhoto.dart';
+import '../providerClass.dart';
 
 class Chat extends StatelessWidget {
   final String peerId;
@@ -92,7 +94,13 @@ class ChatScreenState extends State<ChatScreen> {
     imageUrl = '';
     admin = false;
 
+    ifDelLogOut();
     readLocal();
+  }
+
+
+  void ifDelLogOut() {
+
   }
 
   void onFocusChange() {
@@ -268,11 +276,10 @@ class ChatScreenState extends State<ChatScreen> {
                           ),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12.0),
-                            gradient: LinearGradient(colors: [
-                              Colors.white12,
-                              Colors.black87,
-                              Colors.white12
-                            ]),
+                            image: DecorationImage(
+                              image: AssetImage("assets/icons/bg_chat.png"),
+                              fit: BoxFit.cover,
+                            ),
                           ),
 
                         ),
@@ -428,7 +435,7 @@ class ChatScreenState extends State<ChatScreen> {
                                                       document['timestamp']))),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white54,
+                                          color: Colors.white,
                                           fontSize: 12.0,
                                           ),
                                     ),
@@ -440,7 +447,7 @@ class ChatScreenState extends State<ChatScreen> {
                               Container(
                                 child: Text(
                                   document['content'],
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(color: Colors.black, fontSize: 16),
                                 ),
 //                                margin: EdgeInsets.only(
 //                                    bottom:
@@ -452,12 +459,17 @@ class ChatScreenState extends State<ChatScreen> {
                           padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                           width: 250.0,
                           decoration: BoxDecoration(
-                              gradient: LinearGradient(colors: [
+                              gradient: LinearGradient(
+                                  colors: [
+                                    Colors.black12,
                                 Colors.grey,
-                                Colors.black87,
-                                Colors.grey
-                              ]),
-                              color: Colors.grey,
+                                    Colors.grey,
+
+
+                                    Colors.grey,
+
+                                    Colors.grey
+                              ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                               borderRadius: BorderRadius.circular(8.0)),
                           margin: EdgeInsets.only(left: 10.0),
                         )
@@ -608,6 +620,16 @@ class ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    ChangeTitle changeTitle = Provider.of<ChangeTitle>(context, listen: false);
+
+
+    setState(() {
+      changeTitle.setTitle("Forum");
+    });
+    print(changeTitle.getTitle());
+
+
     return WillPopScope(
       child: Container(
           child: Stack(
@@ -630,10 +652,10 @@ class ChatScreenState extends State<ChatScreen> {
             ],
           ),
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/icons/UTXALERT.jpg"),
-              fit: BoxFit.cover,
-            ),
+//            image: DecorationImage(
+//              image: AssetImage("assets/icons/UTXALERT.jpg"),
+//              fit: BoxFit.cover,
+//            ),
           )),
       onWillPop: onBackPress,
     );
@@ -908,3 +930,5 @@ class ChatScreenState extends State<ChatScreen> {
 //
 //  }
 }
+
+

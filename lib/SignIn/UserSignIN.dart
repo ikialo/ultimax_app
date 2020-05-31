@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
           primaryColor: black,
         ),
         home: ChangeNotifierProvider<EmailPass>(
-          builder: (_) => EmailPass(false),
+          create: (_) => EmailPass(false),
           child: LoginScreen(title: 'CHAT DEMO'),
         ));
   }
@@ -81,7 +81,7 @@ class LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-//    final empass = Provider.of<EmailPass>(context);
+   final empass = Provider.of<EmailPass>(context);
 
     return Scaffold(
 
@@ -99,35 +99,15 @@ class LoginScreenState extends State<LoginScreen> {
             ),
           ),
 
-//              Align(
-//                  alignment: Alignment.topCenter,
-//                  child: Image.asset(
-//                    'assets/icons/topdec.png',
-//                    width: 700,
-//                    height: 150.0,
-//                    fit: BoxFit.fitWidth,
-//                  )),
 
-//              Positioned(
-//                top: 70,
-//                left: 50,
-//                child: Text(
-//                  "Login",
-//                  style: TextStyle(
-//                    color: Colors.white,
-//                    fontSize: 22,
-//                  ),
-//                ),
-//              ),
-
-              Positioned(
+          Positioned(
                   right: 45.0,
                   bottom: 12.0,
                   child: Text(
                     "Developed by Synarc Systems",
                     style: TextStyle(color: Colors.white70, fontSize: 10.0),
                   )),
-              Positioned(
+          Positioned(
                   right: 10.0,
                   bottom: 12.0,
                   child: Hero(
@@ -144,7 +124,7 @@ class LoginScreenState extends State<LoginScreen> {
 
           // Loading
           Positioned(
-            child: isLoading
+            child: empass.getLoading()
                 ? Container(
                     child: Center(
                       child: CircularProgressIndicator(

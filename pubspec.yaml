@@ -38,7 +38,7 @@ dependencies:
 #  call_number: ^0.0.1
   flutter_document_picker: ^4.0.0
   url_launcher: ^5.4.5
-  provider: ^2.0.0+1
+  provider: ^4.0.4
   intl: ^0.16.0
   circular_profile_avatar: ^1.0.6
 #  rate_my_app: ^0.6.0+2
@@ -94,6 +94,10 @@ flutter:
     - "assets/icons/PoliceAbuse.png"
     - "assets/icons/UTX247.png"
     - "assets/icons/UTXOffice.png"
+    - "assets/icons/bg_chat.png"
+    - "assets/icons/water.png"
+    - "assets/icons/pngpower.jpeg"
+
 
 
 

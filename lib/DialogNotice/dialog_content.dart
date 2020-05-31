@@ -194,6 +194,8 @@ class _Dialog_contentState extends State<Dialog_content> {
               'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
               'content': content,
               'attachment': imageURL != null ? imageURL : "no_image",
+              'postToAlert': true
+
             },
           );
         });
@@ -234,6 +236,7 @@ class _Dialog_contentState extends State<Dialog_content> {
               'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
               'content': content,
               'attachment': downloadUrl,
+              'postToAlert': true
             },
           );
         });

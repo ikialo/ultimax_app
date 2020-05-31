@@ -187,6 +187,10 @@ class _SignInFormState extends State<SignInForm> {
   }
 
   Future<void> passCredentialToParent(empass) async {
+
+
+    empass.loading(true);
+
     prefs = await SharedPreferences.getInstance();
 
     try {
@@ -244,6 +248,8 @@ class _SignInFormState extends State<SignInForm> {
           isLoading = false;
         });
 
+        empass.loading(false);
+
         user.getIdToken(refresh: true).then((idToken) =>
             {prefs.setBool("admin", idToken.claims.containsKey("admin"))});
 
@@ -265,6 +271,8 @@ class _SignInFormState extends State<SignInForm> {
         this.setState(() {
           isLoading = false;
         });
+        empass.loading(false);
+
       }
     } catch (e) {
       print(e);
@@ -273,5 +281,8 @@ class _SignInFormState extends State<SignInForm> {
         isLoading = false;
       });
     }
+
+    empass.loading(false);
+
   }
 }

@@ -165,7 +165,7 @@ class _DrawMainState extends State<DrawMain> {
 
 
         ListTile(
-          title: Text("Loggout",style: style,),
+          title: Text("Log out",style: style,),
           trailing: Icon(Icons.exit_to_app),
           onTap: handleSignOut,
         ),
