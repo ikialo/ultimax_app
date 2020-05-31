@@ -497,13 +497,6 @@ class ReportScreenState extends State<ReportScreen> {
   @override
   Widget build(BuildContext context) {
 
-    ChangeTitle changeTitle = Provider.of<ChangeTitle>(context);
-
-
-    setState(() {
-      changeTitle.setTitle("Report");
-    });
-    print("get: "+changeTitle.getTitle());
 
     return WillPopScope(
       child: Container(
