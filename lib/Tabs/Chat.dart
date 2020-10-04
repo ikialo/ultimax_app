@@ -621,13 +621,6 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
 
-    ChangeTitle changeTitle = Provider.of<ChangeTitle>(context, listen: false);
-
-
-    setState(() {
-      changeTitle.setTitle("Forum");
-    });
-    print(changeTitle.getTitle());
 
 
     return WillPopScope(

@@ -55,13 +55,7 @@ class _Numbers_CallState extends State<Numbers_Call> {
   @override
   Widget build(BuildContext context) {
 
-    ChangeTitle changeTitle = Provider.of<ChangeTitle>(context);
 
-
-    setState(() {
-      changeTitle.setTitle("Contacts");
-    });
-    print(changeTitle.getTitle());
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(child: Column(
