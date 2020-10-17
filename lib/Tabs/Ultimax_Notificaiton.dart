@@ -49,9 +49,7 @@ class _NotificationState extends State<Notification_alert> {
   @override
   Widget build(BuildContext context) {
 
-//    final empass = Provider.of<EmailPass>(context);
-//
-//    empass.titleSet("Alert");
+
 
     return Scaffold(
       body:Container(child: Stack(
