@@ -9,7 +9,7 @@ import 'package:ultimax2/SignIn/signInForm.dart';
 
 import '../CustomCurve.dart';
 import '../main.dart';
-import '../providerClass.dart';
+import '../Model/providerClass.dart';
 
 class MyApp extends StatelessWidget {
   Color black = Colors.black;
@@ -65,6 +65,12 @@ class LoginScreenState extends State<LoginScreen> {
     });
 
     prefs = await SharedPreferences.getInstance();
+
+    /// initialize the preferces for read/unread messages
+//    prefs.setInt("repRead", 0);
+//    prefs.setInt("read", 0);
+
+
     print(await FirebaseAuth.instance.currentUser());
     if (await FirebaseAuth.instance.currentUser() != null) {
       Navigator.push(

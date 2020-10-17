@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ultimax2/SignIn/signInClass.dart';
-import 'package:ultimax2/providerClass.dart';
+import 'package:ultimax2/Model/providerClass.dart';
 
 import '../main.dart';
 

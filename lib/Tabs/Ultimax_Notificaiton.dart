@@ -11,7 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ultimax2/DialogNotice/dialog_content.dart';
 
-import '../providerClass.dart';
 
 class Notification_alert extends StatefulWidget {
   @override

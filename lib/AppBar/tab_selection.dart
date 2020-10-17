@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ultimax2/Model/providerClass.dart';
 import 'package:ultimax2/Tabs/CallNumbers.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/ReportPage.dart';
 import 'package:ultimax2/Tabs/Ultimax_Notificaiton.dart';
 
-import '../providerClass.dart';
 
 
 class TabSelection extends StatelessWidget {

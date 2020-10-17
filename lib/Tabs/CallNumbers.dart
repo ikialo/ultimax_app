@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../providerClass.dart';
+import '../Model/providerClass.dart';
 
 // ignore: camel_case_types
 class Numbers_Call extends StatefulWidget {

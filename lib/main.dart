@@ -16,7 +16,8 @@ import 'package:ultimax2/Tabs/CallNumbers.dart';
 import 'package:ultimax2/Tabs/Chat.dart';
 import 'package:ultimax2/Tabs/Private_Message.dart';
 import 'package:ultimax2/Tabs/Ultimax_Notificaiton.dart';
-import 'package:ultimax2/providerClass.dart';
+import 'package:ultimax2/Model/providerClass.dart';
+import 'package:ultimax2/badge_icon.dart';
 
 import 'AppBar/mainDrawer.dart';
 import 'AppBar/tab_selection.dart';
@@ -91,6 +92,7 @@ class MainScreenState extends State<MainScreen> {
   Future<void> registerNotification() async {
     prefs = await SharedPreferences.getInstance();
 
+
     firebaseMessaging.subscribeToTopic("alert").then((res) {
       print("is subscribed");
     }).catchError((onError) {
@@ -102,6 +104,14 @@ class MainScreenState extends State<MainScreen> {
     }).catchError((onError) {
       print("error");
     });
+
+    if (admin) {
+      firebaseMessaging.subscribeToTopic("report").then((res) {
+        print("is subscribed to report");
+      }).catchError((onError) {
+        print("error");
+      });
+    }
 
     firebaseMessaging.requestNotificationPermissions();
 
@@ -369,64 +379,96 @@ class MainScreenState extends State<MainScreen> {
 
 
 
-                    Center(
-                      child: new Container(
 
-                        child: new Material(
-                          child: GestureDetector(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 10.0),
-                                child: Align(
-                                  alignment: Alignment.center,
-                                  child: Hero(
-                                    tag: "ultimax+logo",
-                                    child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(50.0),
-                                        child: Image.asset(iconbtnPath
-                                          ,
-                                          width: imageWidth,
-                                          height:imageHeight,
-                                          fit: BoxFit.cover,
-                                        )),
+
+                    Center(child:Container(
+
+                            child: new Material(
+                              child: GestureDetector(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(top: 10.0),
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Hero(
+                                        tag: "ultimax+logo",
+                                        child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(50.0),
+                                            child: Image.asset(iconbtnPath
+                                              ,
+                                              width: imageWidth,
+                                              height:imageHeight,
+                                              fit: BoxFit.cover,
+                                            )),
+                                      ),
+                                    ),
                                   ),
-                                ),
+
+                                  key: Key("openTabOptions"),
+                                  onTapUp: (tap){
+                                    setState(() {
+                                      iconbtnPath ='assets/icons/photo.png';
+                                      imageWidth = 200;
+                                      imageHeight =200;
+                                    });
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                TabSelection(
+                                                  peerId: "messageboardid",
+                                                  peerAvatar: 'photoUrl',
+                                                )));
+                                  },
+
+                                  onTapDown: (tap) {
+
+                                    setState(() {
+                                      iconbtnPath ='assets/icons/press_icon_btn.png';
+
+                                      imageWidth = 350;
+                                      imageHeight =350;
+                                    });
+
+                                  }
                               ),
+                              color: Colors.transparent,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50.0),),
 
-                              key: Key("openTabOptions"),
-                              onTapUp: (tap){
-                                setState(() {
-                                  iconbtnPath ='assets/icons/photo.png';
-                                  imageWidth = 200;
-                                  imageHeight =200;
-                                });
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TabSelection(
-                                              peerId: "messageboardid",
-                                              peerAvatar: 'photoUrl',
-                                            )));
-                              },
-
-                              onTapDown: (tap) {
-
-                                setState(() {
-                                  iconbtnPath ='assets/icons/press_icon_btn.png';
-
-                                  imageWidth = 350;
-                                  imageHeight =350;
-                                });
-
-                              }
                           ),
-                          color: Colors.transparent,
-                        ),
-                    decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50.0),),
+
+
 
                       ),
-                    ),
+                    // Align(
+                    //   alignment: Alignment.topRight,
+                    //   child: StreamBuilder(stream:
+                    //   Firestore.instance
+                    //       .collection('Notice')
+                    //       .document("Notice_")
+                    //       .collection("Ultimax")
+                    //       .where("postToAlert", isEqualTo: true)
+                    //
+                    //       .orderBy('timestamp', descending: true)
+                    //       .limit(500)
+                    //       .snapshots(),
+                    //     builder: (_,  snapshot) {
+                    //       int number =(snapshot.data.documents.length- prefs.getInt("read"));
+                    //       print("unread : "+number.toString() );
+                    //
+                    //       if (number != 0 || number != null) {
+                    //         return BadgeIcon(icon: Icon(
+                    //           Icons.notifications_active, size: 40,
+                    //           color: Colors.blue,),
+                    //           badgeCount: snapshot.data.documents.length -
+                    //               prefs.getInt("read"),);
+                    //       }
+                    //       else{
+                    //         return Container();
+                    //       }
+                    //     },),
+                    // ),
 
 
                     Positioned(

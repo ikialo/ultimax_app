@@ -26,22 +26,22 @@ void main (){
       }
     });
 
-    test('test gallary', () async {
-      // Use the `driver.getText` method to verify the counter starts at 0.
-      await driver.tap(emailtextFinder);
-      await driver.enterText("isaacsilas05@gmail.com");
-      await driver.tap(passwordTextFinder);
-      await driver.enterText("password");
-      await driver.tap(login);
-      await driver.waitFor(main1);
-      assert (main1 != null);
-      await driver.tap(opentabs);
-      await driver.waitFor(tabSelection);
-      assert(tabSelection !=null);
-      await driver.tap(attachment);
-      await driver.tap(openImage);
-      await driver.waitUntilNoTransientCallbacks();
-    });
+//    test('test gallary', () async {
+//      // Use the `driver.getText` method to verify the counter starts at 0.
+//      await driver.tap(emailtextFinder);
+//      await driver.enterText("isaacsilas05@gmail.com");
+//      await driver.tap(passwordTextFinder);
+//      await driver.enterText("password");
+//      await driver.tap(login);
+//      await driver.waitFor(main1);
+//      assert (main1 != null);
+//      await driver.tap(opentabs);
+//      await driver.waitFor(tabSelection);
+//      assert(tabSelection !=null);
+//      await driver.tap(attachment);
+//      await driver.tap(openImage);
+//      await driver.waitUntilNoTransientCallbacks();
+//    });
 
     test('test camera', () async {
       // Use the `driver.getText` method to verify the counter starts at 0.

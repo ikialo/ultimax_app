@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ultimax2/ReplyPage.dart';
 
 import '../fullPhoto.dart';
-import '../providerClass.dart';
+import '../Model/providerClass.dart';
 
 class Chat extends StatelessWidget {
   final String peerId;
@@ -786,6 +786,7 @@ class ChatScreenState extends State<ChatScreen> {
                   .collection('messages')
                   .document("messbo")
                   .collection("messbo")
+
                   .orderBy('timestamp', descending: true)
                   .limit(500)
                   .snapshots(),

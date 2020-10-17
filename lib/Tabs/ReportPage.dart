@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ultimax2/ReplyPage.dart';
 
 import '../fullPhoto.dart';
-import '../providerClass.dart';
+import '../Model/providerClass.dart';
 
 class Report extends StatelessWidget {
   final String peerId;
@@ -236,6 +236,10 @@ class ReportScreenState extends State<ReportScreen> {
 
 
   Widget buildItem(int index, DocumentSnapshot document) {
+    if (document['idFrom'] == "ultimaxAlertAdmin"){
+      return Container();
+    }
+
     if (document['idFrom'] == id && admin == false) {
       // Right (my message)
       return
@@ -343,7 +347,7 @@ class ReportScreenState extends State<ReportScreen> {
                 )
             )
         );
-    } else if(admin == true && document['idFrom'] !="ultimaxAlertAdmin") {
+    } else if(admin == true ) {
       // if signed in as admin
 
       return
@@ -619,17 +623,19 @@ class ReportScreenState extends State<ReportScreen> {
             .collection('Notice')
             .document("Notice_")
             .collection("Ultimax")
+        .where("postToAlert", isEqualTo: false)
             .orderBy('timestamp', descending: true)
             .limit(500)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
-                child: CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(themeColor)));
+                child: Container()
+            );
           } else {
             listMessage = snapshot.data.documents;
+
+            prefs.setInt("repRead", listMessage.length);
             return ListView.builder(
               padding: EdgeInsets.all(10.0),
               itemBuilder: (context, index) =>
